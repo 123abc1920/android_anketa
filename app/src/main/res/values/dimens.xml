@@ -1,3 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="textSizeMainHeader">20sp</dimen>
+    <dimen name="textSizeHeader">15sp</dimen>
+    <dimen name="textSizeMain">12sp</dimen>
+    <dimen name="textSizeMin">10sp</dimen>
 </resources>

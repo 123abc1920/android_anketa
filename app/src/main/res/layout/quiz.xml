@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:backgroundTint="@color/white"
         android:padding="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:text="Quiz"
                 android:textColor="@color/text"
-                android:textSize="15sp"
+                android:textSize="@dimen/textSizeHeader"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -41,12 +42,12 @@
                 android:id="@+id/author_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingBottom="15dp"
                 android:text="Author"
                 android:textColor="@color/semitext"
-                android:textSize="12sp"
+                android:textSize="@dimen/textSizeMain"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:paddingBottom="15dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/quiz_name" />
 
@@ -57,7 +58,7 @@
                 android:paddingBottom="10dp"
                 android:text="data"
                 android:textColor="@color/text"
-                android:textSize="10sp"
+                android:textSize="@dimen/textSizeMin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/author_name" />
@@ -68,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/darker_main"
                 android:text="Run"
-                android:textSize="12sp"
+                android:textSize="@dimen/textSizeMain"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/watch_btn"
                 app:layout_constraintStart_toStartOf="parent"
@@ -80,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/darker_main"
                 android:text="Watch"
-                android:textSize="12sp"
+                android:textSize="@dimen/textSizeMain"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/run_btn"

@@ -1,4 +1,4 @@
-package com.example.task1.view.main
+package com.example.task1.view.quiz
 
 import android.util.Log
 import android.view.LayoutInflater
