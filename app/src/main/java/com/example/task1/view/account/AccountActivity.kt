@@ -12,10 +12,11 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import com.example.task1.MainActivity
 import com.example.task1.R
 import com.example.task1.controller.client.RetrofitClient
-import com.example.task1.controller.models.TempUserId
 import com.example.task1.view.quiz.QuizAdapter
 import kotlinx.coroutines.launch
 
@@ -24,6 +25,15 @@ class AccountActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_account)
+
+        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+        val sharedPreferences = EncryptedSharedPreferences.create(
+            "preferences",
+            masterKeyAlias,
+            applicationContext,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
 
         val toolbar = findViewById<Toolbar>(R.id.materialToolbar)
         setSupportActionBar(toolbar)
@@ -43,40 +53,27 @@ class AccountActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                val response = RetrofitClient.apiService.getUserData(TempUserId.id.toString())
-                findViewById<TextView>(R.id.username).text = response.username.toString()
-            } catch (e: Exception) {
-                Log.e("API ERROR", "Ошибка загрузки имени", e)
-            }
-        }
-
-        lifecycleScope.launch {
-            try {
-                val createdView = findViewById<RecyclerView>(R.id.created_recycle)
-                val createdAdapter = QuizAdapter(
-                    RetrofitClient.apiService.getCreatedQuizes(
-                        TempUserId.id.toString()
-                    )
+                val response = RetrofitClient.apiService.getUserData(
+                    "Bearer ${
+                        sharedPreferences.getString(
+                            "id",
+                            ""
+                        ).toString()
+                    }"
                 )
+                findViewById<TextView>(R.id.username).text = response.username.toString()
+
+                val createdView = findViewById<RecyclerView>(R.id.created_recycle)
+                val createdAdapter = QuizAdapter(response.created_quizes)
                 createdView.adapter = createdAdapter
                 createdView.layoutManager = LinearLayoutManager(this@AccountActivity)
-            } catch (e: Exception) {
-                Log.e("API ERROR", "Ошибка загрузки созданных", e)
-            }
-        }
 
-        lifecycleScope.launch {
-            try {
                 val doneView = findViewById<RecyclerView>(R.id.done_recycle)
-                val doneAdapter = QuizAdapter(
-                    RetrofitClient.apiService.getCreatedQuizes(
-                        TempUserId.id.toString()
-                    )
-                )
+                val doneAdapter = QuizAdapter(response.done_quizes)
                 doneView.adapter = doneAdapter
                 doneView.layoutManager = LinearLayoutManager(this@AccountActivity)
             } catch (e: Exception) {
-                Log.e("API ERROR", "Ошибка загрузки созданных", e)
+                Log.e("API ERROR", "Ошибка загрузки данных", e)
             }
         }
     }

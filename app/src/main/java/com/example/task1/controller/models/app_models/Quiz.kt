@@ -1,6 +1,4 @@
-package com.example.task1.controller.models
-
-import java.util.Date
+package com.example.task1.controller.models.app_models
 
 data class Quiz(
     val quiz_name: String,

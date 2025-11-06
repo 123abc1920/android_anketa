@@ -13,10 +13,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import com.example.task1.MainActivity
 import com.example.task1.R
 import com.example.task1.controller.client.RetrofitClient
-import com.example.task1.controller.models.TempUserId
 import com.example.task1.controller.models.requests.LoginRequest
 import kotlinx.coroutines.launch
 
@@ -28,6 +29,15 @@ class LoginActivity : AppCompatActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.materialToolbar)
         setSupportActionBar(toolbar)
+
+        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+        val sharedPreferences = EncryptedSharedPreferences.create(
+            "preferences",
+            masterKeyAlias,
+            applicationContext,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -56,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
                         val response =
                             RetrofitClient.apiService.login(LoginRequest(login, password))
                         if (response.result == "success") {
-                            TempUserId.id = response.id
+                            sharedPreferences.edit().putString("id", response.token.toString()).apply()
                             val intent = Intent(this@LoginActivity, AccountActivity::class.java)
                             intent.putExtra("key", value)
                             startActivity(intent)
@@ -81,7 +91,7 @@ class LoginActivity : AppCompatActivity() {
                         val response =
                             RetrofitClient.apiService.signup(LoginRequest(login, password))
                         if (response.result == "success") {
-                            TempUserId.id = response.id
+                            sharedPreferences.edit().putString("id", response.token.toString()).apply()
                             val intent = Intent(this@LoginActivity, AccountActivity::class.java)
                             intent.putExtra("key", value)
                             startActivity(intent)

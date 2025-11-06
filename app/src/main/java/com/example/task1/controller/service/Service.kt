@@ -1,16 +1,10 @@
 package com.example.task1.controller.service
 
-import com.example.task1.controller.models.Answer
-import com.example.task1.controller.models.MyResponse
-import com.example.task1.controller.models.Question
-import com.example.task1.controller.models.Quiz
-import com.example.task1.controller.models.User
-import com.example.task1.controller.models.Result
-import com.example.task1.controller.models.UserAnswer
-import com.example.task1.controller.models.requests.IdRequest
+import com.example.task1.controller.models.responses.MyResponse
+import com.example.task1.controller.models.app_models.Quiz
 import com.example.task1.controller.models.requests.LoginRequest
+import com.example.task1.controller.models.responses.UserDataResponse
 
-import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiService {
@@ -25,13 +19,7 @@ interface ApiService {
     suspend fun signup(@Body loginRequest: LoginRequest): MyResponse
 
     @GET("get_user_data")
-    suspend fun getUserData(@Query("id") id: String): MyResponse
-
-    @GET("get_created")
-    suspend fun getCreatedQuizes(@Query("id") id: String): List<Quiz>
-
-    @GET("get_done")
-    suspend fun getDoneQuizes(@Query("id") id: String): List<Quiz>
+    suspend fun getUserData(@Header("Authorization") id: String): UserDataResponse
 }
 
 

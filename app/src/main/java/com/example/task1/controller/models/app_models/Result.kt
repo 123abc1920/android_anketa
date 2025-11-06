@@ -1,4 +1,4 @@
-package com.example.task1.controller.models
+package com.example.task1.controller.models.app_models
 
 import java.util.Date
 
