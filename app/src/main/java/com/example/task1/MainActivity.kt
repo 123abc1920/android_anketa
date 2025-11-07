@@ -12,10 +12,14 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import com.example.task1.controller.client.RetrofitClient
+import com.example.task1.view.account.AccountActivity
 import com.example.task1.view.account.LoginActivity
 import com.example.task1.view.quiz.QuizAdapter
 import kotlinx.coroutines.launch
+import kotlin.toString
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,9 +56,24 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.account -> {
-                val intent = Intent(this, LoginActivity::class.java)
-                intent.putExtra("key", value)
-                startActivity(intent)
+                val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+                val sharedPreferences = EncryptedSharedPreferences.create(
+                    "preferences",
+                    masterKeyAlias,
+                    applicationContext,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                )
+
+                if (sharedPreferences.getString("id", "").toString() != "") {
+                    val intent = Intent(this, AccountActivity::class.java)
+                    intent.putExtra("key", value)
+                    startActivity(intent)
+                } else {
+                    val intent = Intent(this, LoginActivity::class.java)
+                    intent.putExtra("key", value)
+                    startActivity(intent)
+                }
                 true
             }
 

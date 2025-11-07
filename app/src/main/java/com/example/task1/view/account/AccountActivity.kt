@@ -74,6 +74,9 @@ class AccountActivity : AppCompatActivity() {
                 doneView.layoutManager = LinearLayoutManager(this@AccountActivity)
             } catch (e: Exception) {
                 Log.e("API ERROR", "Ошибка загрузки данных", e)
+                val intent = Intent(this@AccountActivity, LoginActivity::class.java)
+                intent.putExtra("key", value)
+                startActivity(intent)
             }
         }
     }
