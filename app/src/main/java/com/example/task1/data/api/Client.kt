@@ -1,10 +1,9 @@
-package com.example.task1.viewmodel.client
+package com.example.task1.data.api
 
+import com.example.task1.data.database.ApiService
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
-import com.example.task1.viewmodel.service.ApiService
 
 object RetrofitClient {
     private const val BASE_URL = "http://10.0.2.2:5000/" // для эмулятора

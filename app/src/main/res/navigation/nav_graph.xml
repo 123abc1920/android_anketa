@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.task1.view.MainFragment"
+        android:name="com.example.task1.ui.fragments.MainFragment"
         android:label="Anketa"
         tools:layout="@layout/fragment_main"/>
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.task1.view.LoginFragment"
+        android:name="com.example.task1.ui.fragments.LoginFragment"
         android:label=""
         tools:layout="@layout/fragment_login"/>
 
     <fragment
         android:id="@+id/accountFragment"
-        android:name="com.example.task1.view.AccountFragment"
+        android:name="com.example.task1.ui.fragments.AccountFragment"
         android:label=""
         tools:layout="@layout/fragment_account"/>
 </navigation>

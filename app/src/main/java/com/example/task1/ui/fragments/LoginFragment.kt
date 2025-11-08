@@ -1,25 +1,21 @@
-package com.example.task1.view
+package com.example.task1.ui.fragments
 
-import android.R.attr.value
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.example.task1.R
-import com.example.task1.models.requests.LoginRequest
-import com.example.task1.view.quiz.QuizAdapter
-import com.example.task1.viewmodel.client.RetrofitClient
+import com.example.task1.data.database.requests.LoginRequest
+import com.example.task1.data.api.RetrofitClient
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {

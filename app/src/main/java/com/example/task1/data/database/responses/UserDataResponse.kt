@@ -1,6 +1,6 @@
-package com.example.task1.models.responses
+package com.example.task1.data.database.responses
 
-import com.example.task1.models.app_models.Quiz
+import com.example.task1.data.api.models.Quiz
 
 data class UserDataResponse(
     val result: String,

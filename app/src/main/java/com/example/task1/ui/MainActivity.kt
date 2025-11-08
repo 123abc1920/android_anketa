@@ -1,21 +1,13 @@
-package com.example.task1
+package com.example.task1.ui
 
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.task1.R
 import com.example.task1.databinding.ActivityMainBinding
-import com.example.task1.view.quiz.QuizAdapter
-import com.example.task1.viewmodel.client.RetrofitClient
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -60,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    override fun onCreateOptionsMenu(menu: android.view.Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }

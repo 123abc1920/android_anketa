@@ -1,4 +1,4 @@
-package com.example.task1.view.quiz
+package com.example.task1.ui.adapters
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
-import com.example.task1.models.app_models.Quiz
+import com.example.task1.data.api.models.Quiz
 
 class QuizAdapter(
     private var quizzes: List<Quiz>?

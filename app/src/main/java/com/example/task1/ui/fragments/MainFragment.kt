@@ -1,4 +1,4 @@
-package com.example.task1.view
+package com.example.task1.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -10,8 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
-import com.example.task1.view.quiz.QuizAdapter
-import com.example.task1.viewmodel.client.RetrofitClient
+import com.example.task1.ui.adapters.QuizAdapter
+import com.example.task1.data.api.RetrofitClient
 import kotlinx.coroutines.launch
 
 class MainFragment : Fragment() {
