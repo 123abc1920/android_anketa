@@ -1,55 +1,45 @@
-package com.example.task1.view.account
+package com.example.task1.view
 
 import android.R.attr.value
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
-import com.example.task1.MainActivity
 import com.example.task1.R
-import com.example.task1.controller.client.RetrofitClient
 import com.example.task1.view.quiz.QuizAdapter
+import com.example.task1.viewmodel.client.RetrofitClient
 import kotlinx.coroutines.launch
 
-class AccountActivity : AppCompatActivity() {
+class AccountFragment : Fragment() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_account)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_account, container, false)
 
         val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
         val sharedPreferences = EncryptedSharedPreferences.create(
             "preferences",
             masterKeyAlias,
-            applicationContext,
+            requireContext(),
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
-
-        val toolbar = findViewById<Toolbar>(R.id.materialToolbar)
-        setSupportActionBar(toolbar)
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-
-        toolbar.navigationIcon = AppCompatResources.getDrawable(this, R.drawable.arrow)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbar.title = null
-
-        toolbar.setNavigationOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("key", value)
-            startActivity(intent)
-        }
 
         lifecycleScope.launch {
             try {
@@ -61,23 +51,23 @@ class AccountActivity : AppCompatActivity() {
                         ).toString()
                     }"
                 )
-                findViewById<TextView>(R.id.username).text = response.username.toString()
+                view.findViewById<TextView>(R.id.username).text = response.username.toString()
 
-                val createdView = findViewById<RecyclerView>(R.id.created_recycle)
+                val createdView = view.findViewById<RecyclerView>(R.id.created_recycle)
                 val createdAdapter = QuizAdapter(response.created_quizes)
                 createdView.adapter = createdAdapter
-                createdView.layoutManager = LinearLayoutManager(this@AccountActivity)
+                createdView.layoutManager = LinearLayoutManager(requireContext())
 
-                val doneView = findViewById<RecyclerView>(R.id.done_recycle)
+                val doneView = view.findViewById<RecyclerView>(R.id.done_recycle)
                 val doneAdapter = QuizAdapter(response.done_quizes)
                 doneView.adapter = doneAdapter
-                doneView.layoutManager = LinearLayoutManager(this@AccountActivity)
+                doneView.layoutManager = LinearLayoutManager(requireContext())
             } catch (e: Exception) {
                 Log.e("API ERROR", "Ошибка загрузки данных", e)
-                val intent = Intent(this@AccountActivity, LoginActivity::class.java)
-                intent.putExtra("key", value)
-                startActivity(intent)
+                findNavController().navigate(R.id.loginFragment)
             }
         }
+
+        return view
     }
 }

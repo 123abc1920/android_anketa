@@ -1,9 +1,9 @@
-package com.example.task1.controller.service
+package com.example.task1.viewmodel.service
 
-import com.example.task1.controller.models.responses.MyResponse
-import com.example.task1.controller.models.app_models.Quiz
-import com.example.task1.controller.models.requests.LoginRequest
-import com.example.task1.controller.models.responses.UserDataResponse
+import com.example.task1.models.responses.MyResponse
+import com.example.task1.models.app_models.Quiz
+import com.example.task1.models.requests.LoginRequest
+import com.example.task1.models.responses.UserDataResponse
 
 import retrofit2.http.*
 

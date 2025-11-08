@@ -1,83 +1,67 @@
 package com.example.task1
 
-import android.R.attr.value
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
-import com.example.task1.controller.client.RetrofitClient
-import com.example.task1.view.account.AccountActivity
-import com.example.task1.view.account.LoginActivity
+import com.example.task1.databinding.ActivityMainBinding
 import com.example.task1.view.quiz.QuizAdapter
+import com.example.task1.viewmodel.client.RetrofitClient
 import kotlinx.coroutines.launch
-import kotlin.toString
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var navController: NavController
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
 
-        val toolbar = findViewById<Toolbar>(R.id.materialToolbar)
-        setSupportActionBar(toolbar)
-        toolbar.setTitleTextAppearance(this, R.style.RobotoBoldTextAppearance)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        lateinit var quizAdapter: QuizAdapter
-        var recyclerView = findViewById<RecyclerView>(R.id.quiz_view)
+        setupMaterialToolbar()
+        setupNavigation()
+    }
 
-        lifecycleScope.launch {
-            try {
-                val quizzes = RetrofitClient.apiService.getQuizzes()
+    private fun setupMaterialToolbar() {
+        setSupportActionBar(binding.materialToolbar)
 
-                quizAdapter = QuizAdapter(quizzes)
-                recyclerView.adapter = quizAdapter
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+    }
 
-                recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
-            } catch (e: Exception) {
-                Log.e("API ERROR", "Ошибка загрузки анкет", e)
+    private fun setupNavigation() {
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+        setupActionBarWithNavController(navController)
+        binding.materialToolbar.inflateMenu(R.menu.main_menu)
+        binding.materialToolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.account -> {
+                    navController.navigate(R.id.accountFragment)
+                    true
+                }
+                else -> false
             }
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    override fun onCreateOptionsMenu(menu: android.view.Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.account -> {
-                val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-                val sharedPreferences = EncryptedSharedPreferences.create(
-                    "preferences",
-                    masterKeyAlias,
-                    applicationContext,
-                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-                )
-
-                if (sharedPreferences.getString("id", "").toString() != "") {
-                    val intent = Intent(this, AccountActivity::class.java)
-                    intent.putExtra("key", value)
-                    startActivity(intent)
-                } else {
-                    val intent = Intent(this, LoginActivity::class.java)
-                    intent.putExtra("key", value)
-                    startActivity(intent)
-                }
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 }

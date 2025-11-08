@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
-import com.example.task1.controller.models.app_models.Quiz
+import com.example.task1.models.app_models.Quiz
 
 class QuizAdapter(
     private var quizzes: List<Quiz>?

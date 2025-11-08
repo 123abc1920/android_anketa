@@ -1,6 +1,6 @@
-package com.example.task1.controller.models.responses
+package com.example.task1.models.responses
 
-import com.example.task1.controller.models.app_models.Quiz
+import com.example.task1.models.app_models.Quiz
 
 data class UserDataResponse(
     val result: String,

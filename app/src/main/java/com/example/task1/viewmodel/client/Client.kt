@@ -1,12 +1,10 @@
-package com.example.task1.controller.client
+package com.example.task1.viewmodel.client
 
-import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
-import com.example.task1.controller.service.ApiService
+import com.example.task1.viewmodel.service.ApiService
 
 object RetrofitClient {
     private const val BASE_URL = "http://10.0.2.2:5000/" // для эмулятора

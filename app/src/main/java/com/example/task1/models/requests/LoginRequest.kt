@@ -1,4 +1,4 @@
-package com.example.task1.controller.models.requests
+package com.example.task1.models.requests
 
 data class LoginRequest(
     val login: String,

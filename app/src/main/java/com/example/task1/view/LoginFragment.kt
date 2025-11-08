@@ -1,61 +1,57 @@
-package com.example.task1.view.account
+package com.example.task1.view
 
 import android.R.attr.value
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
-import com.example.task1.MainActivity
 import com.example.task1.R
-import com.example.task1.controller.client.RetrofitClient
-import com.example.task1.controller.models.requests.LoginRequest
+import com.example.task1.models.requests.LoginRequest
+import com.example.task1.view.quiz.QuizAdapter
+import com.example.task1.viewmodel.client.RetrofitClient
 import kotlinx.coroutines.launch
 
-class LoginActivity : AppCompatActivity() {
+class LoginFragment : Fragment() {
+
+    private lateinit var loginEditText: EditText
+    private lateinit var passwordEditText: EditText
+    private lateinit var infoText: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_login)
+    }
 
-        val toolbar = findViewById<Toolbar>(R.id.materialToolbar)
-        setSupportActionBar(toolbar)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_login, container, false)
+
+        loginEditText = view.findViewById(R.id.login_in)
+        passwordEditText = view.findViewById(R.id.password_in)
+        infoText = view.findViewById(R.id.info_text)
 
         val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
         val sharedPreferences = EncryptedSharedPreferences.create(
             "preferences",
             masterKeyAlias,
-            applicationContext,
+            requireContext(),
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-
-        toolbar.navigationIcon = AppCompatResources.getDrawable(this, R.drawable.arrow)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbar.title = null
-
-        toolbar.setNavigationOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("key", value)
-            startActivity(intent)
-        }
-
-        val loginEditText = findViewById<EditText>(R.id.login_in)
-        val passwordEditText = findViewById<EditText>(R.id.password_in)
-
-        val loginBtn = findViewById<Button>(R.id.login_btn)
+        val loginBtn = view.findViewById<Button>(R.id.login_btn)
         loginBtn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View?) {
                 val login = loginEditText.text.toString()
@@ -66,21 +62,21 @@ class LoginActivity : AppCompatActivity() {
                         val response =
                             RetrofitClient.apiService.login(LoginRequest(login, password))
                         if (response.result == "success") {
-                            sharedPreferences.edit().putString("id", response.token.toString()).apply()
-                            val intent = Intent(this@LoginActivity, AccountActivity::class.java)
-                            intent.putExtra("key", value)
-                            startActivity(intent)
+                            sharedPreferences.edit()
+                                .putString("id", response.token.toString())
+                                .apply()
                         } else {
-                            findViewById<TextView>(R.id.info_text).text = response.result
+                            infoText.text = response.result
                         }
                     } catch (e: Exception) {
                         Log.e("NetworkError", "Ошибка: ${e.message}")
+                        findNavController().navigate(R.id.accountFragment)
                     }
                 }
             }
         })
 
-        val signupBtn = findViewById<Button>(R.id.signup_btn)
+        val signupBtn = view.findViewById<Button>(R.id.signup_btn)
         signupBtn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 val login = loginEditText.text.toString()
@@ -91,18 +87,20 @@ class LoginActivity : AppCompatActivity() {
                         val response =
                             RetrofitClient.apiService.signup(LoginRequest(login, password))
                         if (response.result == "success") {
-                            sharedPreferences.edit().putString("id", response.token.toString()).apply()
-                            val intent = Intent(this@LoginActivity, AccountActivity::class.java)
-                            intent.putExtra("key", value)
-                            startActivity(intent)
+                            sharedPreferences.edit()
+                                .putString("id", response.token.toString())
+                                .apply()
                         } else {
-                            findViewById<TextView>(R.id.info_text).text = response.result
+                            infoText.text = response.result
                         }
                     } catch (e: Exception) {
                         Log.e("NetworkError", "Ошибка: ${e.message}")
+                        findNavController().navigate(R.id.accountFragment)
                     }
                 }
             }
         })
+
+        return view
     }
 }

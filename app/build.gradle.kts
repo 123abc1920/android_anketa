@@ -56,4 +56,13 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
 
     implementation("androidx.security:security-crypto:1.0.0-alpha02")
+
+    implementation("androidx.navigation:navigation-fragment:2.9.6")
+    implementation("androidx.navigation:navigation-ui:2.9.6")
+
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:2.9.6")
+
+    androidTestImplementation("androidx.navigation:navigation-testing:2.9.6")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 }

@@ -1,4 +1,4 @@
-package com.example.task1.controller.models.app_models
+package com.example.task1.models.app_models
 
 data class Answer(
     val id: Int,
