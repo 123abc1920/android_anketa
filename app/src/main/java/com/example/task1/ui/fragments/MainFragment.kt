@@ -43,7 +43,6 @@ class MainFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 val quizzes = RetrofitClient.apiService.getQuizzes()
-                Log.d("MainFragment", "Получено анкет: ${quizzes.size}")
 
                 quizAdapter = QuizAdapter(quizzes)
                 recyclerView.adapter = quizAdapter

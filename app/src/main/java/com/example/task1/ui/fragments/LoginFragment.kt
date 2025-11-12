@@ -61,12 +61,13 @@ class LoginFragment : Fragment() {
                             sharedPreferences.edit()
                                 .putString("id", response.token.toString())
                                 .apply()
+                            findNavController().navigate(R.id.accountFragment)
                         } else {
                             infoText.text = response.result
                         }
                     } catch (e: Exception) {
                         Log.e("NetworkError", "Ошибка: ${e.message}")
-                        findNavController().navigate(R.id.accountFragment)
+                        findNavController().navigate(R.id.loginFragment)
                     }
                 }
             }
@@ -86,12 +87,13 @@ class LoginFragment : Fragment() {
                             sharedPreferences.edit()
                                 .putString("id", response.token.toString())
                                 .apply()
+                            findNavController().navigate(R.id.accountFragment)
                         } else {
                             infoText.text = response.result
                         }
                     } catch (e: Exception) {
                         Log.e("NetworkError", "Ошибка: ${e.message}")
-                        findNavController().navigate(R.id.accountFragment)
+                        findNavController().navigate(R.id.loginFragment)
                     }
                 }
             }
