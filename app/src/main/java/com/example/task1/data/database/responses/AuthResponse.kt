@@ -1,6 +1,6 @@
 package com.example.task1.data.database.responses
 
-data class MyResponse(
+data class AuthResponse(
     val result: String,
     val token: String? = null
 )

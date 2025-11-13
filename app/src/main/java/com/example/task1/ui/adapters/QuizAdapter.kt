@@ -1,24 +1,15 @@
 package com.example.task1.ui.adapters
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.api.models.Quiz
-import com.example.task1.data.api.RetrofitClient
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 
 class QuizAdapter(
     private var quizzes: List<Quiz>?
@@ -54,7 +45,12 @@ class QuizAdapter(
             }
         }
         holder.watchQuiz.setOnClickListener {
-            Log.i("Quiz", "Watch")
+            quiz?.id?.let { quizId ->
+                val bundle = Bundle().apply {
+                    putString("quizId", quizId.toString())
+                }
+                findNavController(holder.itemView).navigate(R.id.watchFragment, bundle)
+            }
         }
     }
 

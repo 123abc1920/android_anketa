@@ -18,7 +18,6 @@ import com.example.task1.R
 import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.database.requests.QuizRequest
 import com.example.task1.ui.adapters.QuestionAdapter
-import com.example.task1.ui.adapters.QuizAdapter
 import kotlinx.coroutines.launch
 
 class QuizFragment : Fragment() {
