@@ -44,7 +44,7 @@ class WatchFragment : Fragment() {
 
         val quizId = arguments?.getString("quizId")
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             try {
                 quizId?.let {
                     val response = RetrofitClient.apiService.startPreview(quizId)

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,8 @@ class MainFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var quizAdapter: QuizAdapter
 
+    private var currentPage = 1
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,23 +33,33 @@ class MainFragment : Fragment() {
         recyclerView.adapter = quizAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        loadQuizzes()
+
+        val prevBtn = view.findViewById<ImageButton>(R.id.prev)
+        prevBtn.setOnClickListener {
+            currentPage += 1
+            loadQuizzes()
+        }
+        val nextBtn = view.findViewById<ImageButton>(R.id.next)
+        nextBtn.setOnClickListener {
+            currentPage -= 1
+            loadQuizzes()
+        }
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        loadQuizzes()
     }
 
     private fun loadQuizzes() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val quizzes = RetrofitClient.apiService.getQuizzes()
+                val response = RetrofitClient.apiService.getQuizzes(currentPage, 12)
 
-                quizAdapter = QuizAdapter(quizzes)
+                quizAdapter = QuizAdapter(response.quizes)
                 recyclerView.adapter = quizAdapter
-
             } catch (e: Exception) {
                 Log.e("API ERROR", "Ошибка загрузки анкет", e)
             }

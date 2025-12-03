@@ -4,6 +4,7 @@ import com.example.task1.data.api.models.Question
 import com.example.task1.data.database.models.QuestionInQuiz
 
 data class QuizDataResponse(
+    val result: String,
     val author_name: String,
     val quiz_name: String,
     val end_date: String,

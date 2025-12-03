@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.task1.R
+import com.example.task1.data.encryptedprefs.EncryptedPrefsRepository
 import com.example.task1.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -19,6 +20,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        EncryptedPrefsRepository.init(this.applicationContext)
 
         setupMaterialToolbar()
         setupNavigation()
@@ -41,6 +44,10 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.account -> {
                     navController.navigate(R.id.accountFragment)
+                    true
+                }
+                R.id.main -> {
+                    navController.navigate(R.id.mainFragment)
                     true
                 }
                 else -> false

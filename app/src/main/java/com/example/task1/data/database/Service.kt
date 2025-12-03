@@ -6,6 +6,7 @@ import com.example.task1.data.database.requests.LoginRequest
 import com.example.task1.data.database.requests.QuizRequest
 import com.example.task1.data.database.responses.QuizDataResponse
 import com.example.task1.data.database.responses.QuizStatisticsResponse
+import com.example.task1.data.database.responses.QuizzesResponse
 import com.example.task1.data.database.responses.ResultResponse
 import com.example.task1.data.database.responses.UserDataResponse
 
@@ -14,7 +15,10 @@ import retrofit2.http.*
 interface ApiService {
 
     @GET("anketas")
-    suspend fun getQuizzes(): List<Quiz>
+    suspend fun getQuizzes(
+        @Query("page") page: Int,
+        @Query("per_page") per_page: Int
+    ): QuizzesResponse
 
     @POST("login")
     suspend fun login(@Body loginRequest: LoginRequest): AuthResponse
@@ -25,12 +29,15 @@ interface ApiService {
     @GET("get_user_data")
     suspend fun getUserData(@Header("Authorization") id: String): UserDataResponse
 
-    @GET("/start/anketa")
-    suspend fun startAnketa(@Query("id") quizId: String): QuizDataResponse
+    @GET("start/anketa")
+    suspend fun startAnketa(@Header("Authorization") id: String, @Query("id") quizId: String): QuizDataResponse
 
-    @POST("/get/quiz")
-    suspend fun sendQuiz(@Header("Authorization") id: String, @Body requestData: QuizRequest): ResultResponse
+    @POST("get/quiz")
+    suspend fun sendQuiz(
+        @Header("Authorization") id: String,
+        @Body requestData: QuizRequest
+    ): ResultResponse
 
-    @GET("/start/preview")
+    @GET("start/preview")
     suspend fun startPreview(@Query("id") quizId: String): QuizStatisticsResponse
 }

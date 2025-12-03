@@ -16,6 +16,7 @@ import androidx.security.crypto.MasterKeys
 import com.example.task1.R
 import com.example.task1.data.database.requests.LoginRequest
 import com.example.task1.data.api.RetrofitClient
+import com.example.task1.domain.authorisation.saveUserId
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
@@ -38,29 +39,18 @@ class LoginFragment : Fragment() {
         passwordEditText = view.findViewById(R.id.password_in)
         infoText = view.findViewById(R.id.info_text)
 
-        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-        val sharedPreferences = EncryptedSharedPreferences.create(
-            "preferences",
-            masterKeyAlias,
-            requireContext(),
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
-
         val loginBtn = view.findViewById<Button>(R.id.login_btn)
         loginBtn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View?) {
                 val login = loginEditText.text.toString()
                 val password = passwordEditText.text.toString()
 
-                lifecycleScope.launch {
+                viewLifecycleOwner.lifecycleScope.launch {
                     try {
                         val response =
                             RetrofitClient.apiService.login(LoginRequest(login, password))
                         if (response.result == "success") {
-                            sharedPreferences.edit()
-                                .putString("id", response.token.toString())
-                                .apply()
+                            saveUserId(response.token.toString())
                             findNavController().navigate(R.id.accountFragment)
                         } else {
                             infoText.text = response.result
@@ -79,14 +69,12 @@ class LoginFragment : Fragment() {
                 val login = loginEditText.text.toString()
                 val password = passwordEditText.text.toString()
 
-                lifecycleScope.launch {
+                viewLifecycleOwner.lifecycleScope.launch {
                     try {
                         val response =
                             RetrofitClient.apiService.signup(LoginRequest(login, password))
                         if (response.result == "success") {
-                            sharedPreferences.edit()
-                                .putString("id", response.token.toString())
-                                .apply()
+                            saveUserId(response.token.toString())
                             findNavController().navigate(R.id.accountFragment)
                         } else {
                             infoText.text = response.result

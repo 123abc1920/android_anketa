@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -16,6 +17,7 @@ import androidx.security.crypto.MasterKeys
 import com.example.task1.R
 import com.example.task1.ui.adapters.QuizAdapter
 import com.example.task1.data.api.RetrofitClient
+import com.example.task1.domain.authorisation.getUserId
 import kotlinx.coroutines.launch
 
 class AccountFragment : Fragment() {
@@ -30,24 +32,10 @@ class AccountFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_account, container, false)
 
-        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-        val sharedPreferences = EncryptedSharedPreferences.create(
-            "preferences",
-            masterKeyAlias,
-            requireContext(),
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
-
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val response = RetrofitClient.apiService.getUserData(
-                    "Bearer ${
-                        sharedPreferences.getString(
-                            "id",
-                            ""
-                        ).toString()
-                    }"
+                    "Bearer ${getUserId()}"
                 )
                 view.findViewById<TextView>(R.id.username).text = response.username.toString()
 

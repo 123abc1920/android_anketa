@@ -34,4 +34,10 @@
         android:name="com.example.task1.ui.fragments.WatchFragment"
         android:label=""
         tools:layout="@layout/fragment_watch"/>
+
+    <fragment
+        android:id="@+id/createFragment"
+        android:name="com.example.task1.ui.fragments.CreateQuizFragment"
+        android:label=""
+        tools:layout="@layout/fragment_create_quiz"/>
 </navigation>

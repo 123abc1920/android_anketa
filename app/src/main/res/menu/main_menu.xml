@@ -6,4 +6,9 @@
         android:icon="@drawable/person"
         android:title="Account"
         app:showAsAction="always"></item>
+    <item
+        android:id="@+id/main"
+        android:icon="@drawable/flower2"
+        android:title="Main"
+        app:showAsAction="always"></item>
 </menu>

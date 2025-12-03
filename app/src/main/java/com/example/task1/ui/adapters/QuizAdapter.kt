@@ -6,8 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import com.example.task1.R
 import com.example.task1.data.api.models.Quiz
 
@@ -37,7 +40,7 @@ class QuizAdapter(
         holder.date.text = "${formatDate(quiz?.end_date)}"
 
         holder.runQuiz.setOnClickListener {
-            quiz?.id?.let { quizId ->
+            quiz?.crypted_link?.let { quizId ->
                 val bundle = Bundle().apply {
                     putString("quizId", quizId.toString())
                 }
@@ -45,7 +48,7 @@ class QuizAdapter(
             }
         }
         holder.watchQuiz.setOnClickListener {
-            quiz?.id?.let { quizId ->
+            quiz?.crypted_link?.let { quizId ->
                 val bundle = Bundle().apply {
                     putString("quizId", quizId.toString())
                 }
