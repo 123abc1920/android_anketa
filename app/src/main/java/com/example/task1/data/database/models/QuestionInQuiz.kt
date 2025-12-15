@@ -4,7 +4,7 @@ data class QuestionInQuiz(
     val question_text: String,
     val id: String,
     val required: Boolean,
-    val answers: List<AnswerInQuiz>,
+    val answers: List<AnswerInQuiz>?,
     var selectedAnswerId: String? = null,
     var selectedAnswerText: String? = null
 )

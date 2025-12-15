@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -32,12 +33,17 @@ class AccountFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_account, container, false)
 
+        view.findViewById<Button>(R.id.create_btn).setOnClickListener {
+            findNavController().navigate(R.id.createFragment)
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val response = RetrofitClient.apiService.getUserData(
                     "Bearer ${getUserId()}"
                 )
                 view.findViewById<TextView>(R.id.username).text = response.username.toString()
+                view.findViewById<TextView>(R.id.login).text = response.login.toString()
 
                 val createdView = view.findViewById<RecyclerView>(R.id.created_recycle)
                 val createdAdapter = QuizAdapter(response.created_quizes)
