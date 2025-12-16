@@ -4,6 +4,7 @@ import com.example.task1.data.database.responses.AuthResponse
 import com.example.task1.data.api.models.Quiz
 import com.example.task1.data.database.requests.LoginRequest
 import com.example.task1.data.database.requests.QuizRequest
+import com.example.task1.data.database.responses.CreateQuizResponse
 import com.example.task1.data.database.responses.QuizDataResponse
 import com.example.task1.data.database.responses.QuizStatisticsResponse
 import com.example.task1.data.database.responses.QuizzesResponse
@@ -30,7 +31,16 @@ interface ApiService {
     suspend fun getUserData(@Header("Authorization") id: String): UserDataResponse
 
     @GET("start/anketa")
-    suspend fun startAnketa(@Header("Authorization") id: String, @Query("id") quizId: String): QuizDataResponse
+    suspend fun startAnketa(
+        @Header("Authorization") id: String,
+        @Query("id") quizId: String
+    ): QuizDataResponse
+
+    @POST("create/quiz")
+    suspend fun createQuiz(
+        @Header("Authorization") id: String,
+        @Body quizData: CreateQuizResponse
+    ): ResultResponse
 
     @POST("get/quiz")
     suspend fun sendQuiz(

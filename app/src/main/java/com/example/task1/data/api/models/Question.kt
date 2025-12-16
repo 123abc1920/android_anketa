@@ -1,8 +1,9 @@
 package com.example.task1.data.api.models
 
+import com.example.task1.data.database.models.AnswerInCreateQuiz
+
 data class Question(
-    val id: Int,
     val text: String,
-    val quiz_id: Int,
-    val is_required: Boolean
+    val is_required: Boolean,
+    val answers: List<AnswerInCreateQuiz>
 )

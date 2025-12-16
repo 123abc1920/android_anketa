@@ -43,9 +43,6 @@ class CreateQuizAdapter(
     override fun onBindViewHolder(holder: CreateQuizViewHolder, position: Int) {
         val question = questions?.get(position)
 
-        holder.addAnswer.setOnClickListener(null)
-        holder.deleteQuestion.setOnClickListener(null)
-
         holder.answersView.adapter = holder.answersAdapter
         holder.answersView.layoutManager = LinearLayoutManager(holder.context)
 
@@ -57,6 +54,9 @@ class CreateQuizAdapter(
         holder.deleteQuestion.setOnClickListener {
             val adapterPosition = position
             if (adapterPosition != RecyclerView.NO_POSITION) {
+                holder.addAnswer.setOnClickListener(null)
+                holder.deleteQuestion.setOnClickListener(null)
+                holder.answersList=mutableListOf<Answer>()
                 questions?.remove(question)
                 notifyItemRemoved(position)
             }

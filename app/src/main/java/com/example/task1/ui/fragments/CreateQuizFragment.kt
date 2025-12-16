@@ -1,20 +1,32 @@
 package com.example.task1.ui.fragments
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
+import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.api.models.Answer
 import com.example.task1.data.api.models.Question
+import com.example.task1.data.database.models.AnswerInCreateQuiz
 import com.example.task1.data.database.models.AnswerInQuiz
 import com.example.task1.data.database.models.QuestionInQuiz
+import com.example.task1.data.database.responses.CreateQuizResponse
+import com.example.task1.domain.authorisation.getUserId
 import com.example.task1.ui.adapters.CreateQuizAdapter
 import com.example.task1.ui.adapters.QuestionAdapter
+import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class CreateQuizFragment : Fragment() {
     private lateinit var createdQuestionView: RecyclerView
@@ -41,6 +53,113 @@ class CreateQuizFragment : Fragment() {
             val position = questions.size
             questions.add(QuestionInQuiz("", "1", false, emptyList(), null, null))
             createdQuestionAdapter.notifyItemInserted(position)
+        }
+
+        var startDate = view.findViewById<EditText>(R.id.start_date)
+        startDate.setOnTouchListener { _, event ->
+            if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+                val c = Calendar.getInstance()
+                DatePickerDialog(
+                    requireContext(), { _, year, month, day ->
+                        android.app.TimePickerDialog(
+                            requireContext(), { _, hour, minute ->
+                                val dateStr = String.format(
+                                    "%04d-%02d-%02d %02d:%02d:00",
+                                    year, month + 1, day, hour, minute
+                                )
+                                startDate.setText(dateStr)
+                            },
+                            c.get(java.util.Calendar.HOUR_OF_DAY),
+                            c.get(java.util.Calendar.MINUTE),
+                            true
+                        ).show()
+                    },
+                    c.get(java.util.Calendar.YEAR),
+                    c.get(java.util.Calendar.MONTH),
+                    c.get(java.util.Calendar.DAY_OF_MONTH)
+                ).show()
+            }
+            false
+        }
+
+        var endDate = view.findViewById<EditText>(R.id.end_date)
+        endDate.setOnTouchListener { _, event ->
+            if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+                val c = Calendar.getInstance()
+                DatePickerDialog(
+                    requireContext(), { _, year, month, day ->
+                        android.app.TimePickerDialog(
+                            requireContext(), { _, hour, minute ->
+                                val dateStr = String.format(
+                                    "%04d-%02d-%02d %02d:%02d:00",
+                                    year, month + 1, day, hour, minute
+                                )
+                                endDate.setText(dateStr)
+                            },
+                            c.get(Calendar.HOUR_OF_DAY),
+                            c.get(Calendar.MINUTE),
+                            true
+                        ).show()
+                    },
+                    c.get(Calendar.YEAR),
+                    c.get(Calendar.MONTH),
+                    c.get(Calendar.DAY_OF_MONTH)
+                ).show()
+            }
+            false
+        }
+
+        view.findViewById<Button>(R.id.send_created_quiz).setOnClickListener {
+            val questionsList = mutableListOf<Question>()
+
+            for (i in 0 until createdQuestionView.childCount) {
+                val questionView = createdQuestionView.getChildAt(i)
+
+                val questionName =
+                    questionView.findViewById<EditText>(R.id.question_name).text.toString()
+                val isRequired = questionView.findViewById<CheckBox>(R.id.is_required).isChecked
+
+                val answersRecyclerView = questionView.findViewById<RecyclerView>(R.id.answers_view)
+                val answersList = mutableListOf<AnswerInCreateQuiz>()
+
+                for (j in 0 until answersRecyclerView.childCount) {
+                    val answerView = answersRecyclerView.getChildAt(j)
+                    val answerText =
+                        answerView.findViewById<EditText>(R.id.answer_text).text.toString()
+
+                    if (answerText.isNotEmpty()) {
+                        answersList.add(AnswerInCreateQuiz(answerText))
+                    }
+                }
+
+                questionsList.add(
+                    Question(
+                        questionName,
+                        isRequired,
+                        answersList
+                    )
+                )
+            }
+
+            val createdQuiz = CreateQuizResponse(
+                view.findViewById<EditText>(R.id.quiz_name).text.toString(),
+                view.findViewById<CheckBox>(R.id.author_shown).isChecked,
+                view.findViewById<CheckBox>(R.id.quiz_shown).isChecked,
+                view.findViewById<EditText>(R.id.start_date).text.toString(),
+                view.findViewById<EditText>(R.id.end_date).text.toString(),
+                questionsList
+            )
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                val response = RetrofitClient.apiService.createQuiz(
+                    "Bearer ${getUserId()}", createdQuiz
+                )
+                if (response.result == "success") {
+                    findNavController().navigate(R.id.accountFragment)
+                    Toast.makeText(requireContext(), "Анкета создана!", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
         }
 
         return view
