@@ -1,6 +1,7 @@
 package com.example.task1.ui.adapters
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,13 +71,13 @@ class CreatedQuizAdapter(
                 var response: ResultResponse = ResultResponse("unsuccess")
                 lifecycleOwner.lifecycleScope.launch {
                     response = RetrofitClient.apiService.deleteQuiz(mapOf("id" to quiz?.id))
+                    if (response.result == "success") {
+                        Toast.makeText(holder.context, "Анкета удалена!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
                 quizzes?.remove(quiz)
                 notifyItemRemoved(position)
-                if (response.result == "success") {
-                    Toast.makeText(holder.context, "Анкета удалена!", Toast.LENGTH_SHORT)
-                        .show()
-                }
             }
         }
     }
