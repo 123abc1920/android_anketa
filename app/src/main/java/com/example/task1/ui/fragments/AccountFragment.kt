@@ -18,7 +18,9 @@ import androidx.security.crypto.MasterKeys
 import com.example.task1.R
 import com.example.task1.ui.adapters.QuizAdapter
 import com.example.task1.data.api.RetrofitClient
+import com.example.task1.data.api.models.Quiz
 import com.example.task1.domain.authorisation.getUserId
+import com.example.task1.ui.adapters.CreatedQuizAdapter
 import kotlinx.coroutines.launch
 
 class AccountFragment : Fragment() {
@@ -46,7 +48,10 @@ class AccountFragment : Fragment() {
                 view.findViewById<TextView>(R.id.login).text = response.login.toString()
 
                 val createdView = view.findViewById<RecyclerView>(R.id.created_recycle)
-                val createdAdapter = QuizAdapter(response.created_quizes)
+                val createdAdapter = CreatedQuizAdapter(
+                    response.created_quizes as MutableList<Quiz>?,
+                    viewLifecycleOwner
+                )
                 createdView.adapter = createdAdapter
                 createdView.layoutManager = LinearLayoutManager(requireContext())
 

@@ -8,7 +8,12 @@
         app:showAsAction="always"></item>
     <item
         android:id="@+id/main"
-        android:icon="@drawable/flower2"
+        android:icon="@drawable/house_solid_full"
         android:title="Main"
+        app:showAsAction="always"></item>
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/arrow_right_from_bracket_solid_full"
+        android:title="Log out"
         app:showAsAction="always"></item>
 </menu>

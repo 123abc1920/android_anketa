@@ -1,7 +1,6 @@
 package com.example.task1.data.database
 
 import com.example.task1.data.database.responses.AuthResponse
-import com.example.task1.data.api.models.Quiz
 import com.example.task1.data.database.requests.LoginRequest
 import com.example.task1.data.database.requests.QuizRequest
 import com.example.task1.data.database.responses.CreateQuizResponse
@@ -35,6 +34,9 @@ interface ApiService {
         @Header("Authorization") id: String,
         @Query("id") quizId: String
     ): QuizDataResponse
+
+    @POST("delete/quiz")
+    suspend fun deleteQuiz(@Body request: Map<String, Int?>): ResultResponse
 
     @POST("create/quiz")
     suspend fun createQuiz(

@@ -9,6 +9,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.task1.R
 import com.example.task1.data.encryptedprefs.EncryptedPrefsRepository
 import com.example.task1.databinding.ActivityMainBinding
+import com.example.task1.domain.authorisation.saveUserId
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,10 +47,18 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.accountFragment)
                     true
                 }
+
                 R.id.main -> {
                     navController.navigate(R.id.mainFragment)
                     true
                 }
+
+                R.id.logout -> {
+                    saveUserId("")
+                    navController.navigate(R.id.loginFragment)
+                    true
+                }
+
                 else -> false
             }
         }
@@ -61,6 +70,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.accountFragment -> {
+                    menu?.findItem(R.id.logout)?.isVisible = true
+                }
+
+                else -> {
+                    menu?.findItem(R.id.logout)?.isVisible = false
+                }
+            }
+        }
+
         return true
     }
 }
