@@ -46,4 +46,10 @@
         android:name="com.example.task1.ui.fragments.SettingsFragment"
         android:label=""
         tools:layout="@layout/fragment_settings"/>
+
+    <fragment
+        android:id="@+id/editQuizFragment"
+        android:name="com.example.task1.ui.fragments.EditQuizFragment"
+        android:label=""
+        tools:layout="@layout/fragment_edit_quiz"/>
 </navigation>

@@ -1,22 +1,14 @@
 package com.example.task1.ui.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.Checkable
-import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.TextView
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.api.models.Answer
-import com.example.task1.data.database.models.AnswerInQuiz
 import com.example.task1.data.database.models.QuestionAnswer
 import com.example.task1.data.database.models.QuestionInQuiz
 

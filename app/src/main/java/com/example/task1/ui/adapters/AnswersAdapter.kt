@@ -33,6 +33,8 @@ class AnswersAdapter(
     override fun onBindViewHolder(holder: AnswerViewHolder, position: Int) {
         val answer = answers?.get(position)
 
+        holder.answerText.setText(answer?.text.toString())
+
         holder.button.setOnClickListener {
             answers?.remove(answer)
             notifyItemRemoved(position)

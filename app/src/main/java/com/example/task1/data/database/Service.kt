@@ -4,6 +4,8 @@ import com.example.task1.data.database.responses.AuthResponse
 import com.example.task1.data.database.requests.LoginRequest
 import com.example.task1.data.database.requests.QuizRequest
 import com.example.task1.data.database.responses.CreateQuizResponse
+import com.example.task1.data.database.responses.EditQuizRequest
+import com.example.task1.data.database.responses.QuizDataForEditResponse
 import com.example.task1.data.database.responses.QuizDataResponse
 import com.example.task1.data.database.responses.QuizStatisticsResponse
 import com.example.task1.data.database.responses.QuizzesResponse
@@ -63,5 +65,16 @@ interface ApiService {
     suspend fun setPassword(
         @Header("Authorization") id: String,
         @Body request: Map<String, String>
+    ): ResultResponse
+
+    @GET("get/quiz/data")
+    suspend fun getQuizData(
+        @Header("Authorization") id: String,
+        @Query("id") quizId: String
+    ): QuizDataForEditResponse
+
+    @POST("edit/quiz")
+    suspend fun editQuiz(
+        @Body data: EditQuizRequest
     ): ResultResponse
 }

@@ -1,7 +1,6 @@
 package com.example.task1.ui.adapters
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -79,6 +78,13 @@ class CreatedQuizAdapter(
                 quizzes?.remove(quiz)
                 notifyItemRemoved(position)
             }
+        }
+
+        holder.editBtn.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("quizId", quiz?.crypted_link.toString())
+            }
+            findNavController(holder.itemView).navigate(R.id.editQuizFragment, bundle)
         }
     }
 
