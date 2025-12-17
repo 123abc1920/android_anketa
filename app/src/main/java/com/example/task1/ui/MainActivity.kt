@@ -59,6 +59,11 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
+                R.id.settings -> {
+                    navController.navigate(R.id.settingsFragment)
+                    true
+                }
+
                 else -> false
             }
         }

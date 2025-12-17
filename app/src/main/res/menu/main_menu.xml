@@ -12,6 +12,11 @@
         android:title="Main"
         app:showAsAction="always"></item>
     <item
+        android:id="@+id/settings"
+        android:icon="@drawable/gear_solid_full"
+        android:title="Settings"
+        app:showAsAction="always"></item>
+    <item
         android:id="@+id/logout"
         android:icon="@drawable/arrow_right_from_bracket_solid_full"
         android:title="Log out"

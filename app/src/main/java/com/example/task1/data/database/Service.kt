@@ -52,4 +52,16 @@ interface ApiService {
 
     @GET("start/preview")
     suspend fun startPreview(@Query("id") quizId: String): QuizStatisticsResponse
+
+    @POST("set/data")
+    suspend fun setData(
+        @Header("Authorization") id: String,
+        @Body request: Map<String, String>
+    ): ResultResponse
+
+    @POST("change/password")
+    suspend fun setPassword(
+        @Header("Authorization") id: String,
+        @Body request: Map<String, String>
+    ): ResultResponse
 }

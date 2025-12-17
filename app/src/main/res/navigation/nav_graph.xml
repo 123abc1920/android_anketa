@@ -40,4 +40,10 @@
         android:name="com.example.task1.ui.fragments.CreateQuizFragment"
         android:label=""
         tools:layout="@layout/fragment_create_quiz"/>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.task1.ui.fragments.SettingsFragment"
+        android:label=""
+        tools:layout="@layout/fragment_settings"/>
 </navigation>
