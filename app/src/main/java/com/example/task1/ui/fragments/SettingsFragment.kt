@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.task1.R
 import com.example.task1.data.api.RetrofitClient
 import com.example.task1.domain.authorisation.getUserId
@@ -30,15 +31,19 @@ class SettingsFragment : Fragment() {
         var view = inflater.inflate(R.layout.fragment_settings, container, false)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            var userData = RetrofitClient.apiService.getUserData(
-                "Bearer ${getUserId()}"
-            )
+            try {
+                var userData = RetrofitClient.apiService.getUserData(
+                    "Bearer ${getUserId()}"
+                )
 
-            if (userData.result == "success") {
-                view.findViewById<ConstraintLayout>(R.id.for_logged).visibility = View.VISIBLE
+                if (userData.result == "success") {
+                    view.findViewById<ConstraintLayout>(R.id.for_logged).visibility = View.VISIBLE
 
-                view.findViewById<EditText>(R.id.name_text).setText(userData.username)
-                view.findViewById<EditText>(R.id.login_text).setText(userData.login)
+                    view.findViewById<EditText>(R.id.name_text).setText(userData.username)
+                    view.findViewById<EditText>(R.id.login_text).setText(userData.login)
+                }
+            } catch (e: Exception) {
+                Log.e("API ERROR", "Ошибка загрузки данных", e)
             }
 
             view.findViewById<Button>(R.id.save_userdata).setOnClickListener {
