@@ -17,6 +17,141 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/finding"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="3dp"
+                app:cardCornerRadius="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:padding="10dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/dashed_border"
+                        android:padding="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <EditText
+                            android:id="@+id/find_edit_text"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="10dp"
+                            android:hint="Поиск..."
+                            app:layout_constraintBottom_toTopOf="@+id/expand_btn"
+                            app:layout_constraintEnd_toStartOf="@+id/find_btn"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageButton
+                            android:id="@+id/find_btn"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/magnifying_glass_solid_full"
+                            android:backgroundTint="@color/darker_main"
+                            app:layout_constraintBottom_toTopOf="@id/expand_btn"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/find_edit_text"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageButton
+                            android:id="@+id/expand_btn"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/arrow_bar_down"
+                            android:backgroundTint="@color/darker_main"
+                            app:layout_constraintBottom_toTopOf="@id/open_special"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/find_edit_text" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/open_special"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/expand_btn"
+                            android:visibility="gone">
+
+                            <ImageButton
+                                android:id="@+id/not_expand_btn"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_marginRight="5dp"
+                                android:background="@drawable/arrow_bar_up"
+                                android:backgroundTint="@color/darker_main"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/quiz_link_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Ссылка на опрос:"
+                                android:textColor="@color/semitext"
+                                android:textSize="@dimen/textSizeMain"
+                                android:textStyle="bold"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/not_expand_btn" />
+
+                            <EditText
+                                android:id="@+id/quiz_link"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/quiz_link_text" />
+
+                            <Button
+                                android:id="@+id/run_quiz_link"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/darker_main"
+                                android:text="Пройти"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/textSizeMin"
+                                app:layout_constraintEnd_toStartOf="@id/watch_quiz_link"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/quiz_link" />
+
+                            <Button
+                                android:id="@+id/watch_quiz_link"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/darker_main"
+                                android:text="Результаты"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/textSizeMin"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/run_quiz_link"
+                                app:layout_constraintTop_toBottomOf="@id/quiz_link" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/quiz_view"
                 android:layout_width="match_parent"
@@ -26,7 +161,7 @@
                 android:layout_marginRight="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/finding" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/btn_row"

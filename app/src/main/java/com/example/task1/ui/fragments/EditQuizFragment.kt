@@ -28,7 +28,6 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import kotlin.random.Random
 
-
 class EditQuizFragment : Fragment() {
 
     private lateinit var createdQuestionView: RecyclerView

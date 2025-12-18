@@ -5,9 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
@@ -44,6 +48,40 @@ class MainFragment : Fragment() {
         nextBtn.setOnClickListener {
             currentPage -= 1
             loadQuizzes()
+        }
+
+        val expandableView = view.findViewById<ConstraintLayout>(R.id.open_special)
+        val expandBtn = view.findViewById<ImageButton>(R.id.expand_btn)
+        expandBtn.setOnClickListener {
+            expandBtn.visibility = View.GONE
+            expandableView.visibility = View.VISIBLE
+        }
+
+        view.findViewById<ImageButton>(R.id.not_expand_btn).setOnClickListener {
+            expandBtn.visibility = View.VISIBLE
+            expandableView.visibility = View.GONE
+        }
+
+        val quizLink = view.findViewById<EditText>(R.id.quiz_link)
+        view.findViewById<Button>(R.id.run_quiz_link).setOnClickListener {
+            var link = quizLink.text.toString()
+
+            if (link != "") {
+                val bundle = Bundle().apply {
+                    putString("quizId", link)
+                }
+                findNavController().navigate(R.id.quizFragment, bundle)
+            }
+        }
+        view.findViewById<Button>(R.id.watch_quiz_link).setOnClickListener {
+            var link = quizLink.text.toString()
+
+            if (link != "") {
+                val bundle = Bundle().apply {
+                    putString("quizId", link)
+                }
+                findNavController().navigate(R.id.watchFragment, bundle)
+            }
         }
 
         return view

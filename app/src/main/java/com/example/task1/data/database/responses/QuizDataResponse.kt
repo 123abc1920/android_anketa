@@ -10,5 +10,6 @@ data class QuizDataResponse(
     val end_date: String,
     val start_date: String,
     val id: String,
-    val questions_list: List<QuestionInQuiz>
+    val questions_list: List<QuestionInQuiz>,
+    val crypted_link: String
 )

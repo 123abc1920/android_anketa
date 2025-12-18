@@ -1,12 +1,17 @@
 package com.example.task1.ui.fragments
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +26,8 @@ class WatchFragment : Fragment() {
     private lateinit var usersAdapter: UsersAdapter
     private lateinit var questionsView: RecyclerView
     private lateinit var questionsAdapter: WatchQuestionAdapter
+
+    private lateinit var link: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +64,7 @@ class WatchFragment : Fragment() {
                     endData.text = response.end_date
                     val authorName = view.findViewById<TextView>(R.id.author_name)
                     authorName.text = response.author_name
+                    link = response.crypted_link
 
                     questionsAdapter = WatchQuestionAdapter(response.questions_list)
                     questionsView.adapter = questionsAdapter
@@ -67,6 +75,14 @@ class WatchFragment : Fragment() {
             } catch (e: Exception) {
                 Log.e("API ERROR", "Ошибка загрузки превью анкеты", e)
             }
+        }
+
+        view.findViewById<ImageButton>(R.id.copy_link).setOnClickListener {
+            val clipboard =
+                requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboard.setPrimaryClip(ClipData.newPlainText("", link))
+            Toast.makeText(requireContext(), "Ссылка скопирована!", Toast.LENGTH_SHORT)
+                .show()
         }
 
         return view

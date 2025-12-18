@@ -15,5 +15,6 @@ data class QuizStatisticsResponse (
     val start_date: String,
     val id: String,
     val questions_list: List<QuestionInWatch>,
-    var users_list: List<String>
+    var users_list: List<String>,
+    var crypted_link: String
 )
