@@ -89,9 +89,9 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="20dp"
                             android:paddingRight="20dp"
+                            android:visibility="gone"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/expand_btn"
-                            android:visibility="gone">
+                            app:layout_constraintTop_toBottomOf="@id/expand_btn">
 
                             <ImageButton
                                 android:id="@+id/not_expand_btn"
@@ -104,6 +104,124 @@
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
 
+                            <CheckBox
+                                android:id="@+id/in_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:drawableTint="@color/darker_main"
+                                android:text="Искать в названии"
+                                android:textColor="@color/text"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/not_expand_btn" />
+
+                            <CheckBox
+                                android:id="@+id/in_author"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableTint="@color/darker_main"
+                                android:text="Искать в имени автора"
+                                android:textColor="@color/text"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/in_name" />
+
+                            <CheckBox
+                                android:id="@+id/ended"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableTint="@color/darker_main"
+                                android:text="Оконченные"
+                                android:textColor="@color/text"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/in_author" />
+
+                            <CheckBox
+                                android:id="@+id/not_ended"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableTint="@color/darker_main"
+                                android:text="Не оконченные"
+                                android:textColor="@color/text"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/ended" />
+
+                            <CheckBox
+                                android:id="@+id/near_ended"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableTint="@color/darker_main"
+                                android:text="Скоро закончатся"
+                                android:textColor="@color/text"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/not_ended" />
+
+                            <CheckBox
+                                android:id="@+id/near_not_ended"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableTint="@color/darker_main"
+                                android:text="Недавно созданы"
+                                android:textColor="@color/text"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/near_ended" />
+
+                            <TextView
+                                android:id="@+id/answers"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Количество вопросов:"
+                                android:textColor="@color/semitext"
+                                android:textSize="@dimen/textSizeMain"
+                                android:textStyle="bold"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/near_not_ended" />
+
+                            <EditText
+                                android:id="@+id/answers_count"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/answers" />
+
+                            <TextView
+                                android:id="@+id/start_date_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Открыты с:"
+                                android:textColor="@color/semitext"
+                                android:textSize="@dimen/textSizeMain"
+                                android:textStyle="bold"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/answers_count" />
+
+                            <EditText
+                                android:id="@+id/start_date"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="datetime"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/start_date_text" />
+
+                            <TextView
+                                android:id="@+id/end_date_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Закрываются в:"
+                                android:textColor="@color/semitext"
+                                android:textSize="@dimen/textSizeMain"
+                                android:textStyle="bold"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/start_date" />
+
+                            <EditText
+                                android:id="@+id/end_date"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="datetime"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/end_date_text" />
+
                             <TextView
                                 android:id="@+id/quiz_link_text"
                                 android:layout_width="match_parent"
@@ -113,7 +231,7 @@
                                 android:textSize="@dimen/textSizeMain"
                                 android:textStyle="bold"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/not_expand_btn" />
+                                app:layout_constraintTop_toBottomOf="@id/end_date" />
 
                             <EditText
                                 android:id="@+id/quiz_link"

@@ -3,6 +3,7 @@ package com.example.task1.data.database
 import com.example.task1.data.database.responses.AuthResponse
 import com.example.task1.data.database.requests.LoginRequest
 import com.example.task1.data.database.requests.QuizRequest
+import com.example.task1.data.database.requests.SearchQuizRequest
 import com.example.task1.data.database.responses.CreateQuizResponse
 import com.example.task1.data.database.responses.EditQuizRequest
 import com.example.task1.data.database.responses.QuizDataForEditResponse
@@ -77,4 +78,9 @@ interface ApiService {
     suspend fun editQuiz(
         @Body data: EditQuizRequest
     ): ResultResponse
+
+    @POST("search")
+    suspend fun search(
+        @Body data: SearchQuizRequest
+    ): QuizzesResponse
 }
