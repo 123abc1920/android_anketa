@@ -1,4 +1,4 @@
-package com.example.task1.ui.fragments
+package com.example.task1.features.user.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -11,11 +11,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
 import com.example.task1.R
-import com.example.task1.data.database.requests.LoginRequest
 import com.example.task1.data.api.RetrofitClient
+import com.example.task1.data.database.requests.LoginRequest
 import com.example.task1.domain.authorisation.saveUserId
 import kotlinx.coroutines.launch
 

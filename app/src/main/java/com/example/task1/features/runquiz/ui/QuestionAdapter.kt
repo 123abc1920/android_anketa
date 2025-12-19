@@ -1,4 +1,4 @@
-package com.example.task1.ui.fragments
+package com.example.task1.features.runquiz.ui
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,28 +9,31 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
-import com.example.task1.data.database.responses.Question
+import com.example.task1.data.database.models.QuestionAnswer
+import com.example.task1.data.database.models.QuestionInQuiz
 
-class QuestionEdit(
-    private var questions: List<Question>?
-) : RecyclerView.Adapter<QuestionEdit.QuestionEditViewHolder>() {
+class QuestionAdapter(
+    private var questions: List<QuestionInQuiz>?
+) : RecyclerView.Adapter<QuestionAdapter.QuestionViewHolder>() {
 
-    class QuestionEditViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class QuestionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val questionName: TextView = itemView.findViewById(R.id.question_name)
         val questionAnswer: EditText = itemView.findViewById(R.id.answer_text)
         val answersRadioGroup: RadioGroup = itemView.findViewById(R.id.answers_view)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestionEditViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestionViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.question, parent, false)
-        return QuestionEditViewHolder(view)
+        return QuestionViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: QuestionEditViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: QuestionViewHolder, position: Int) {
         val question = questions?.get(position)
 
-        holder.questionName.text = question?.question_text
+        val required = if (question?.required == true) "*" else ""
+
+        holder.questionName.text = question?.question_text + " " + required
 
         holder.answersRadioGroup.removeAllViews()
 
@@ -54,6 +57,8 @@ class QuestionEdit(
                 val selectedAnswerId = selectedRadioButton?.tag as? String
                 val selectedAnswerText = selectedRadioButton?.text.toString()
 
+                question.selectedAnswerText = null
+                question.selectedAnswerId = selectedAnswerId
             }
 
         } else {
@@ -63,12 +68,28 @@ class QuestionEdit(
             holder.questionAnswer.setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     val answerText = holder.questionAnswer.text.toString()
+                    question?.selectedAnswerText = answerText
                 }
             }
         }
     }
 
     override fun getItemCount(): Int = questions?.size ?: 0
+
+    fun getAnswers(): List<QuestionAnswer> {
+        return questions?.map { question ->
+            QuestionAnswer(
+                id = question.id,
+                answer_id = question.selectedAnswerId,
+                answer_text = question.selectedAnswerText
+            )
+        } ?: emptyList()
+    }
+
+    fun updateQuizzes(newQuestions: List<QuestionInQuiz>) {
+        this.questions = newQuestions
+        notifyDataSetChanged()
+    }
 
     private fun formatDate(dateString: String?): String {
         return if (dateString.isNullOrEmpty()) "не указана"

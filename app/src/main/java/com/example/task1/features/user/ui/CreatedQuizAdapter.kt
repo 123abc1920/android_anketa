@@ -1,4 +1,4 @@
-package com.example.task1.ui.adapters
+package com.example.task1.features.user.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation.findNavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.api.RetrofitClient
@@ -52,7 +52,7 @@ class CreatedQuizAdapter(
                 val bundle = Bundle().apply {
                     putString("quizId", quizId.toString())
                 }
-                findNavController(holder.itemView).navigate(R.id.quizFragment, bundle)
+                Navigation.findNavController(holder.itemView).navigate(R.id.quizFragment, bundle)
             }
         }
         holder.watchQuiz.setOnClickListener {
@@ -60,7 +60,7 @@ class CreatedQuizAdapter(
                 val bundle = Bundle().apply {
                     putString("quizId", quizId.toString())
                 }
-                findNavController(holder.itemView).navigate(R.id.watchFragment, bundle)
+                Navigation.findNavController(holder.itemView).navigate(R.id.watchFragment, bundle)
             }
         }
 
@@ -84,7 +84,7 @@ class CreatedQuizAdapter(
             val bundle = Bundle().apply {
                 putString("quizId", quiz?.crypted_link.toString())
             }
-            findNavController(holder.itemView).navigate(R.id.editQuizFragment, bundle)
+            Navigation.findNavController(holder.itemView).navigate(R.id.editQuizFragment, bundle)
         }
     }
 

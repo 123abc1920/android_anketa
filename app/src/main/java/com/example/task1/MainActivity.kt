@@ -1,4 +1,4 @@
-package com.example.task1.ui
+package com.example.task1
 
 import android.os.Bundle
 import android.view.Menu
@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.example.task1.R
 import com.example.task1.data.encryptedprefs.EncryptedPrefsRepository
 import com.example.task1.databinding.ActivityMainBinding
 import com.example.task1.domain.authorisation.saveUserId

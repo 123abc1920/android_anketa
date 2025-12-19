@@ -1,4 +1,4 @@
-package com.example.task1.ui.fragments
+package com.example.task1.features.user.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -6,21 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
 import com.example.task1.R
-import com.example.task1.ui.adapters.QuizAdapter
 import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.api.models.Quiz
 import com.example.task1.domain.authorisation.getUserId
-import com.example.task1.ui.adapters.CreatedQuizAdapter
+import com.example.task1.features.mainpage.ui.QuizAdapter
 import kotlinx.coroutines.launch
 
 class AccountFragment : Fragment() {

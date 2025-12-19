@@ -1,4 +1,4 @@
-package com.example.task1.ui.adapters
+package com.example.task1.features.mainpage.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.navigation.Navigation.findNavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.api.models.Quiz
@@ -41,7 +41,7 @@ class QuizAdapter(
                 val bundle = Bundle().apply {
                     putString("quizId", quizId.toString())
                 }
-                findNavController(holder.itemView).navigate(R.id.quizFragment, bundle)
+                Navigation.findNavController(holder.itemView).navigate(R.id.quizFragment, bundle)
             }
         }
         holder.watchQuiz.setOnClickListener {
@@ -49,7 +49,7 @@ class QuizAdapter(
                 val bundle = Bundle().apply {
                     putString("quizId", quizId.toString())
                 }
-                findNavController(holder.itemView).navigate(R.id.watchFragment, bundle)
+                Navigation.findNavController(holder.itemView).navigate(R.id.watchFragment, bundle)
             }
         }
     }

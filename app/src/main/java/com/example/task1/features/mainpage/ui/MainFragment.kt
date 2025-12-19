@@ -1,14 +1,15 @@
-package com.example.task1.ui.fragments
+package com.example.task1.features.mainpage.ui
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +19,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
-import com.example.task1.ui.adapters.QuizAdapter
 import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.database.requests.Filter
 import com.example.task1.data.database.requests.SearchQuizRequest
@@ -107,14 +107,14 @@ class MainFragment : Fragment() {
 
         var startDate = view.findViewById<EditText>(R.id.start_date)
         startDate.setOnTouchListener { _, event ->
-            if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            if (event.action == MotionEvent.ACTION_DOWN) {
                 val c = Calendar.getInstance()
                 DatePickerDialog(
                     requireContext(), { _, year, month, day ->
-                        android.app.TimePickerDialog(
+                        TimePickerDialog(
                             requireContext(), { _, hour, minute ->
                                 val dateStr = String.format(
-                                    "%04d-%02d-%02dT%02d:%02d",  // Без секунд
+                                    "%04d-%02d-%02dT%02d:%02d",
                                     year, month + 1, day, hour, minute
                                 )
                                 startDate.setText(dateStr)
@@ -134,11 +134,11 @@ class MainFragment : Fragment() {
 
         var endDate = view.findViewById<EditText>(R.id.end_date)
         endDate.setOnTouchListener { _, event ->
-            if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            if (event.action == MotionEvent.ACTION_DOWN) {
                 val c = Calendar.getInstance()
                 DatePickerDialog(
                     requireContext(), { _, year, month, day ->
-                        android.app.TimePickerDialog(
+                        TimePickerDialog(
                             requireContext(), { _, hour, minute ->
                                 val dateStr = String.format(
                                     "%04d-%02d-%02dT%02d:%02d",  // Без секунд

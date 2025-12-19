@@ -1,15 +1,17 @@
-package com.example.task1.ui.fragments
+package com.example.task1.features.editcreate.ui.fragment
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +23,8 @@ import com.example.task1.data.database.models.AnswerInCreateQuiz
 import com.example.task1.data.database.models.QuestionInQuiz
 import com.example.task1.data.database.responses.CreateQuizResponse
 import com.example.task1.domain.authorisation.getUserId
-import com.example.task1.ui.adapters.CreateQuizAdapter
+import com.example.task1.features.editcreate.domain.InitDatePickers
+import com.example.task1.features.editcreate.ui.adapter.CreateQuizAdapter
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -53,58 +56,10 @@ class CreateQuizFragment : Fragment() {
         }
 
         var startDate = view.findViewById<EditText>(R.id.start_date)
-        startDate.setOnTouchListener { _, event ->
-            if (event.action == android.view.MotionEvent.ACTION_DOWN) {
-                val c = Calendar.getInstance()
-                DatePickerDialog(
-                    requireContext(), { _, year, month, day ->
-                        android.app.TimePickerDialog(
-                            requireContext(), { _, hour, minute ->
-                                val dateStr = String.format(
-                                    "%04d-%02d-%02d %02d:%02d:00",
-                                    year, month + 1, day, hour, minute
-                                )
-                                startDate.setText(dateStr)
-                            },
-                            c.get(java.util.Calendar.HOUR_OF_DAY),
-                            c.get(java.util.Calendar.MINUTE),
-                            true
-                        ).show()
-                    },
-                    c.get(java.util.Calendar.YEAR),
-                    c.get(java.util.Calendar.MONTH),
-                    c.get(java.util.Calendar.DAY_OF_MONTH)
-                ).show()
-            }
-            false
-        }
+        InitDatePickers.InitDatePicker(startDate, requireContext())
 
         var endDate = view.findViewById<EditText>(R.id.end_date)
-        endDate.setOnTouchListener { _, event ->
-            if (event.action == android.view.MotionEvent.ACTION_DOWN) {
-                val c = Calendar.getInstance()
-                DatePickerDialog(
-                    requireContext(), { _, year, month, day ->
-                        android.app.TimePickerDialog(
-                            requireContext(), { _, hour, minute ->
-                                val dateStr = String.format(
-                                    "%04d-%02d-%02d %02d:%02d:00",
-                                    year, month + 1, day, hour, minute
-                                )
-                                endDate.setText(dateStr)
-                            },
-                            c.get(Calendar.HOUR_OF_DAY),
-                            c.get(Calendar.MINUTE),
-                            true
-                        ).show()
-                    },
-                    c.get(Calendar.YEAR),
-                    c.get(Calendar.MONTH),
-                    c.get(Calendar.DAY_OF_MONTH)
-                ).show()
-            }
-            false
-        }
+        InitDatePickers.InitDatePicker(endDate, requireContext())
 
         view.findViewById<Button>(R.id.send_created_quiz).setOnClickListener {
             val questionsList = mutableListOf<Question>()

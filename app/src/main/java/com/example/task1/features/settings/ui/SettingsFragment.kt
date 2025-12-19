@@ -1,9 +1,7 @@
-package com.example.task1.ui.fragments
+package com.example.task1.features.settings.ui
 
 import android.os.Bundle
-import android.text.Editable
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +9,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.example.task1.R
 import com.example.task1.data.api.RetrofitClient
 import com.example.task1.domain.authorisation.getUserId

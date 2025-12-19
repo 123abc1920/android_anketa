@@ -1,11 +1,10 @@
-package com.example.task1.ui.fragments
+package com.example.task1.features.runquiz.ui
 
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +21,6 @@ import com.example.task1.R
 import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.database.requests.QuizRequest
 import com.example.task1.domain.authorisation.getUserId
-import com.example.task1.ui.adapters.QuestionAdapter
 import kotlinx.coroutines.launch
 
 class QuizFragment : Fragment() {

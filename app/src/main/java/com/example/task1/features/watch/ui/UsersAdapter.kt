@@ -1,4 +1,4 @@
-package com.example.task1.ui.adapters
+package com.example.task1.features.watch.ui
 
 import android.view.LayoutInflater
 import android.view.View

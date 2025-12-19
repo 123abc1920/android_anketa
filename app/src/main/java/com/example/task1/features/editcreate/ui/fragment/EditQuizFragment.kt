@@ -1,10 +1,11 @@
-package com.example.task1.ui.fragments
+package com.example.task1.features.editcreate.ui.fragment
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -12,6 +13,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +25,7 @@ import com.example.task1.data.database.responses.EditQuizRequest
 import com.example.task1.data.database.responses.Question
 import com.example.task1.data.database.responses.QuestionRequest
 import com.example.task1.domain.authorisation.getUserId
-import com.example.task1.ui.adapters.EditQuizAdapter
+import com.example.task1.features.editcreate.ui.adapter.EditQuizAdapter
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import kotlin.random.Random
@@ -89,11 +91,11 @@ class EditQuizFragment : Fragment() {
 
         var startDate = view.findViewById<EditText>(R.id.start_date)
         startDate.setOnTouchListener { _, event ->
-            if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            if (event.action == MotionEvent.ACTION_DOWN) {
                 val c = Calendar.getInstance()
                 DatePickerDialog(
                     requireContext(), { _, year, month, day ->
-                        android.app.TimePickerDialog(
+                        TimePickerDialog(
                             requireContext(), { _, hour, minute ->
                                 val dateStr = String.format(
                                     "%04d-%02d-%02d %02d:%02d:00",
@@ -116,11 +118,11 @@ class EditQuizFragment : Fragment() {
 
         var endDate = view.findViewById<EditText>(R.id.end_date)
         endDate.setOnTouchListener { _, event ->
-            if (event.action == android.view.MotionEvent.ACTION_DOWN) {
+            if (event.action == MotionEvent.ACTION_DOWN) {
                 val c = Calendar.getInstance()
                 DatePickerDialog(
                     requireContext(), { _, year, month, day ->
-                        android.app.TimePickerDialog(
+                        TimePickerDialog(
                             requireContext(), { _, hour, minute ->
                                 val dateStr = String.format(
                                     "%04d-%02d-%02d %02d:%02d:00",
@@ -152,7 +154,7 @@ class EditQuizFragment : Fragment() {
                 questions.map { question ->
                     QuestionRequest(
                         if (question.id.isNotEmpty()) question.id else "new-${
-                            Random.nextInt(
+                            Random.Default.nextInt(
                                 100000
                             )
                         }",
@@ -161,7 +163,7 @@ class EditQuizFragment : Fragment() {
                         question.answers.map { answer ->
                             AnswerRequest(
                                 if (answer.id > 0) answer.id.toString() else "new-${
-                                    Random.nextInt(
+                                    Random.Default.nextInt(
                                         100000
                                     )
                                 }",

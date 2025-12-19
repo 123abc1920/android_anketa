@@ -1,6 +1,5 @@
-package com.example.task1.ui.adapters
+package com.example.task1.features.editcreate.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,6 @@ class EditQuizAdapter(
         var answersView: RecyclerView = itemView.findViewById(R.id.answers_view)
         var context = itemView.context
         var questionName = itemView.findViewById<EditText>(R.id.question_name)
-        // Убрал answersList и answersAdapter отсюда!
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditQuizViewHolder {

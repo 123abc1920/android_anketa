@@ -1,4 +1,4 @@
-package com.example.task1.ui.adapters
+package com.example.task1.features.editcreate.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -39,7 +39,7 @@ class CreateQuizAdapter(
         holder.answersView.layoutManager = LinearLayoutManager(holder.context)
 
         holder.addAnswer.setOnClickListener {
-            holder.answersList.add(Answer(1, "hhh", 2))
+            holder.answersList.add(Answer(1, "", 2))
             holder.answersAdapter.notifyDataSetChanged()
         }
 
@@ -56,26 +56,4 @@ class CreateQuizAdapter(
     }
 
     override fun getItemCount(): Int = questions?.size ?: 0
-
-    fun getAnswers(): List<QuestionAnswer> {
-        return questions?.map { question ->
-            QuestionAnswer(
-                id = question.id,
-                answer_id = question.selectedAnswerId,
-                answer_text = question.selectedAnswerText
-            )
-        } ?: emptyList()
-    }
-
-    fun updateQuizzes(newQuestions: MutableList<QuestionInQuiz>) {
-        this.questions = newQuestions
-        notifyDataSetChanged()
-    }
-
-    private fun formatDate(dateString: String?): String {
-        return if (dateString.isNullOrEmpty()) "не указана"
-        else {
-            dateString
-        }
-    }
 }

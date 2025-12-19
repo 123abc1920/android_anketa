@@ -7,49 +7,49 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.task1.ui.fragments.MainFragment"
+        android:name="com.example.task1.features.mainpage.ui.MainFragment"
         android:label="Anketa"
         tools:layout="@layout/fragment_main" />
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.task1.ui.fragments.LoginFragment"
+        android:name="com.example.task1.features.user.ui.LoginFragment"
         android:label=""
         tools:layout="@layout/fragment_login" />
 
     <fragment
         android:id="@+id/accountFragment"
-        android:name="com.example.task1.ui.fragments.AccountFragment"
+        android:name="com.example.task1.features.user.ui.AccountFragment"
         android:label=""
         tools:layout="@layout/fragment_account" />
 
     <fragment
         android:id="@+id/quizFragment"
-        android:name="com.example.task1.ui.fragments.QuizFragment"
+        android:name="com.example.task1.features.runquiz.ui.QuizFragment"
         android:label=""
         tools:layout="@layout/fragment_quiz"/>
 
     <fragment
         android:id="@+id/watchFragment"
-        android:name="com.example.task1.ui.fragments.WatchFragment"
+        android:name="com.example.task1.features.watch.ui.WatchFragment"
         android:label=""
         tools:layout="@layout/fragment_watch"/>
 
     <fragment
         android:id="@+id/createFragment"
-        android:name="com.example.task1.ui.fragments.CreateQuizFragment"
+        android:name="com.example.task1.features.editcreate.ui.fragment.CreateQuizFragment"
         android:label=""
         tools:layout="@layout/fragment_create_quiz"/>
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.task1.ui.fragments.SettingsFragment"
+        android:name="com.example.task1.features.settings.ui.SettingsFragment"
         android:label=""
         tools:layout="@layout/fragment_settings"/>
 
     <fragment
         android:id="@+id/editQuizFragment"
-        android:name="com.example.task1.ui.fragments.EditQuizFragment"
+        android:name="com.example.task1.features.editcreate.ui.fragment.EditQuizFragment"
         android:label=""
         tools:layout="@layout/fragment_edit_quiz"/>
 </navigation>
