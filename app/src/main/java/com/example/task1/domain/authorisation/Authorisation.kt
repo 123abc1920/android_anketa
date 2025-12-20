@@ -6,6 +6,10 @@ fun getUserId(): String {
     return EncryptedPrefsRepository.getUserId()
 }
 
+fun getUserIdHeader(): String{
+    return "Bearer ${getUserId()}"
+}
+
 fun saveUserId(id: String) {
     EncryptedPrefsRepository.saveUserId(id)
 }

@@ -8,6 +8,7 @@ import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.api.models.Answer
+import kotlin.collections.remove
 
 class AnswersAdapter(
     private var answers: MutableList<Answer>?
@@ -30,17 +31,25 @@ class AnswersAdapter(
         holder.answerText.setText(answer?.text.toString())
 
         holder.button.setOnClickListener {
-            answers?.remove(answer)
-            notifyItemRemoved(position)
+            deleteAnswer(position)
         }
     }
 
     override fun getItemCount(): Int = answers?.size ?: 0
 
-    private fun formatDate(dateString: String?): String {
-        return if (dateString.isNullOrEmpty()) "не указана"
-        else {
-            dateString
-        }
+    fun addAnswer(id: Int = 1, questionId: Int = 2) {
+        answers?.add(Answer(id, "", questionId))
+        notifyDataSetChanged()
     }
+
+    fun addAnswer(answer: Answer) {
+        answers?.add(answer)
+        notifyDataSetChanged()
+    }
+
+    fun deleteAnswer(position: Int) {
+        answers?.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
 }

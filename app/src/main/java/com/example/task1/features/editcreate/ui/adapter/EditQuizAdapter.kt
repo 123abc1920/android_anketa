@@ -41,24 +41,19 @@ class EditQuizAdapter(
         holder.answersView.layoutManager = LinearLayoutManager(holder.context)
 
         holder.addAnswer.setOnClickListener {
-            val newAnswer = Answer(
+            /*val newAnswer = Answer(
                 question.answers.size + 1,
-                "Новый вариант",
+                "",
                 question.id.toIntOrNull() ?: -1
             )
-            question.answers.add(newAnswer)
-            answersAdapter.notifyDataSetChanged()
+            question.answers.add(newAnswer)*/
+            answersAdapter.addAnswer(question.answers.size + 1, question.id.toIntOrNull() ?: -1)
         }
 
         holder.deleteQuestion.setOnClickListener {
-            val adapterPosition = holder.adapterPosition
-            if (adapterPosition != RecyclerView.NO_POSITION) {
-                questions.removeAt(adapterPosition)
-                notifyItemRemoved(adapterPosition)
-            }
+            deleteQuestion(position)
         }
 
-        // Для изменения текста вопроса
         holder.questionName.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 question.question_text = holder.questionName.text.toString()
@@ -68,8 +63,24 @@ class EditQuizAdapter(
 
     override fun getItemCount(): Int = questions.size
 
-    fun updateQuizzes(newQuestions: MutableList<Question>) {
+    fun updateQuestions(newQuestions: MutableList<Question>) {
         this.questions = newQuestions
         notifyDataSetChanged()
+    }
+
+    fun addQuestion() {
+        val newQuestion = Question(
+            "", "", "", mutableListOf(),
+        )
+        questions.add(newQuestion)
+        notifyDataSetChanged()
+    }
+
+    fun deleteQuestion(position: Int) {
+        val adapterPosition = position
+        if (adapterPosition != RecyclerView.NO_POSITION) {
+            questions.removeAt(adapterPosition)
+            notifyItemRemoved(adapterPosition)
+        }
     }
 }

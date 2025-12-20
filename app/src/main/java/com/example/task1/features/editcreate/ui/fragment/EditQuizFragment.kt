@@ -1,11 +1,8 @@
 package com.example.task1.features.editcreate.ui.fragment
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -24,11 +21,14 @@ import com.example.task1.data.database.responses.AnswerRequest
 import com.example.task1.data.database.responses.EditQuizRequest
 import com.example.task1.data.database.responses.Question
 import com.example.task1.data.database.responses.QuestionRequest
-import com.example.task1.domain.authorisation.getUserId
+import com.example.task1.domain.initdatepickers.InitDatePickers
+import com.example.task1.features.editcreate.domain.loadQuizData
+import com.example.task1.features.editcreate.domain.sendCreatedQuiz
 import com.example.task1.features.editcreate.ui.adapter.EditQuizAdapter
 import kotlinx.coroutines.launch
-import java.util.Calendar
+import kotlin.compareTo
 import kotlin.random.Random
+import kotlin.toString
 
 class EditQuizFragment : Fragment() {
 
@@ -41,6 +41,7 @@ class EditQuizFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    @SuppressLint("CutPasteId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,137 +55,60 @@ class EditQuizFragment : Fragment() {
         createdQuestionView.adapter = createdQuestionAdapter
         createdQuestionView.layoutManager = LinearLayoutManager(requireContext())
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                quizId?.let {
-                    val response = RetrofitClient.apiService.getQuizData(
-                        "Bearer ${getUserId()}",
-                        quizId
-                    )
+        val quizData = loadQuizData(viewLifecycleOwner, findNavController(), quizId)
 
-                    val quizName = view.findViewById<TextView>(R.id.quiz_name)
-                    quizName.text = response.quiz_name
-
-                    val startData = view.findViewById<EditText>(R.id.start_date)
-                    startData.setText(response.start_date)
-
-                    val endData = view.findViewById<EditText>(R.id.end_date)
-                    endData.setText(response.end_date)
-
-                    questions.clear()
-                    questions.addAll(response.questions_list)
-                    createdQuestionAdapter.notifyDataSetChanged()
-                }
-            } catch (e: Exception) {
-                Log.e("API ERROR", "Ошибка загрузки анкеты", e)
-                findNavController().navigate(R.id.accountFragment)
-            }
-        }
+        view.findViewById<TextView>(R.id.quiz_name).text = quizData.get("quizName").toString()
+        view.findViewById<EditText>(R.id.start_date).setText(quizData.get("startDate").toString())
+        view.findViewById<EditText>(R.id.end_date).setText(quizData.get("endDate").toString())
+        createdQuestionAdapter.updateQuestions(quizData.get("questionList") as MutableList<Question>)
 
         view.findViewById<Button>(R.id.add_question_btn).setOnClickListener {
-            val newQuestion = Question(
-                "", "", "", mutableListOf(),
-            )
-            questions.add(newQuestion)
-            createdQuestionAdapter.notifyDataSetChanged()
+            createdQuestionAdapter.addQuestion()
         }
 
         var startDate = view.findViewById<EditText>(R.id.start_date)
-        startDate.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                val c = Calendar.getInstance()
-                DatePickerDialog(
-                    requireContext(), { _, year, month, day ->
-                        TimePickerDialog(
-                            requireContext(), { _, hour, minute ->
-                                val dateStr = String.format(
-                                    "%04d-%02d-%02d %02d:%02d:00",
-                                    year, month + 1, day, hour, minute
-                                )
-                                startDate.setText(dateStr)
-                            },
-                            c.get(Calendar.HOUR_OF_DAY),
-                            c.get(Calendar.MINUTE),
-                            true
-                        ).show()
-                    },
-                    c.get(Calendar.YEAR),
-                    c.get(Calendar.MONTH),
-                    c.get(Calendar.DAY_OF_MONTH)
-                ).show()
-            }
-            false
-        }
+        InitDatePickers.InitDatePicker(startDate, requireContext())
 
         var endDate = view.findViewById<EditText>(R.id.end_date)
-        endDate.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                val c = Calendar.getInstance()
-                DatePickerDialog(
-                    requireContext(), { _, year, month, day ->
-                        TimePickerDialog(
-                            requireContext(), { _, hour, minute ->
-                                val dateStr = String.format(
-                                    "%04d-%02d-%02d %02d:%02d:00",
-                                    year, month + 1, day, hour, minute
-                                )
-                                endDate.setText(dateStr)
-                            },
-                            c.get(Calendar.HOUR_OF_DAY),
-                            c.get(Calendar.MINUTE),
-                            true
-                        ).show()
-                    },
-                    c.get(Calendar.YEAR),
-                    c.get(Calendar.MONTH),
-                    c.get(Calendar.DAY_OF_MONTH)
-                ).show()
-            }
-            false
-        }
+        InitDatePickers.InitDatePicker(endDate, requireContext())
 
         view.findViewById<Button>(R.id.send_created_quiz).setOnClickListener {
-            val editRequest = EditQuizRequest(
-                quizId ?: "",
-                view.findViewById<EditText>(R.id.quiz_name).text.toString(),
-                view.findViewById<CheckBox>(R.id.author_shown).isChecked,
-                view.findViewById<CheckBox>(R.id.quiz_shown).isChecked,
-                view.findViewById<EditText>(R.id.start_date).text.toString(),
-                view.findViewById<EditText>(R.id.end_date).text.toString(),
-                questions.map { question ->
-                    QuestionRequest(
-                        if (question.id.isNotEmpty()) question.id else "new-${
-                            Random.Default.nextInt(
-                                100000
-                            )
-                        }",
-                        question.question_text,
-                        false,
-                        question.answers.map { answer ->
-                            AnswerRequest(
-                                if (answer.id > 0) answer.id.toString() else "new-${
-                                    Random.Default.nextInt(
-                                        100000
-                                    )
-                                }",
-                                answer.text
-                            )
-                        }
-                    )
-                }
-            )
-
-            viewLifecycleOwner.lifecycleScope.launch {
-                val response = RetrofitClient.apiService.editQuiz(
-                    editRequest
-                )
-                if (response.result == "success") {
-                    findNavController().navigate(R.id.accountFragment)
-                    Toast.makeText(requireContext(), "Анкета обновлена!", Toast.LENGTH_SHORT).show()
-                }
-            }
+            val editQuiz = createEditQuiz(quizId.toString(), view)
+            sendCreatedQuiz(viewLifecycleOwner, requireContext(), findNavController(), editQuiz)
         }
 
         return view
+    }
+
+    private fun createEditQuiz(quizId: String, view: View): EditQuizRequest {
+        return EditQuizRequest(
+            quizId ?: "",
+            view.findViewById<EditText>(R.id.quiz_name).text.toString(),
+            view.findViewById<CheckBox>(R.id.author_shown).isChecked,
+            view.findViewById<CheckBox>(R.id.quiz_shown).isChecked,
+            view.findViewById<EditText>(R.id.start_date).text.toString(),
+            view.findViewById<EditText>(R.id.end_date).text.toString(),
+            questions.map { question ->
+                QuestionRequest(
+                    if (question.id.isNotEmpty()) question.id else "new-${
+                        Random.Default.nextInt(
+                            100000
+                        )
+                    }",
+                    question.question_text,
+                    false,
+                    question.answers.map { answer ->
+                        AnswerRequest(
+                            if (answer.id > 0) answer.id.toString() else "new-${
+                                Random.Default.nextInt(
+                                    100000
+                                )
+                            }",
+                            answer.text
+                        )
+                    }
+                )
+            }
+        )
     }
 }

@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.api.models.Answer
+import com.example.task1.data.api.models.Question
 import com.example.task1.data.database.models.QuestionAnswer
 import com.example.task1.data.database.models.QuestionInQuiz
+import kotlin.collections.remove
 
 class CreateQuizAdapter(
     private var questions: MutableList<QuestionInQuiz>?
@@ -23,7 +25,7 @@ class CreateQuizAdapter(
         var answersView: RecyclerView = itemView.findViewById(R.id.answers_view)
         var answersList = mutableListOf<Answer>()
         var answersAdapter = AnswersAdapter(answersList)
-        var context=itemView.context;
+        var context = itemView.context;
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CreateQuizViewHolder {
@@ -39,21 +41,32 @@ class CreateQuizAdapter(
         holder.answersView.layoutManager = LinearLayoutManager(holder.context)
 
         holder.addAnswer.setOnClickListener {
-            holder.answersList.add(Answer(1, "", 2))
-            holder.answersAdapter.notifyDataSetChanged()
+            holder.answersAdapter.addAnswer()
         }
 
         holder.deleteQuestion.setOnClickListener {
-            val adapterPosition = position
-            if (adapterPosition != RecyclerView.NO_POSITION) {
-                holder.addAnswer.setOnClickListener(null)
-                holder.deleteQuestion.setOnClickListener(null)
-                holder.answersList=mutableListOf<Answer>()
-                questions?.remove(question)
-                notifyItemRemoved(position)
+            if (question != null) {
+                deleteQuestion(position, question)
             }
         }
     }
 
     override fun getItemCount(): Int = questions?.size ?: 0
+
+    fun addQuestion() {
+        var position = questions?.size
+        questions?.add(QuestionInQuiz("", "1", false, emptyList(), null, null))
+        if (position == null) {
+            position = 0
+        }
+        notifyItemInserted(position)
+    }
+
+    fun deleteQuestion(position: Int, question: QuestionInQuiz) {
+        val adapterPosition = position
+        if (adapterPosition != RecyclerView.NO_POSITION) {
+            questions?.remove(question)
+            notifyItemRemoved(position)
+        }
+    }
 }

@@ -16,7 +16,7 @@ import com.example.task1.R
 import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.api.models.Quiz
 import com.example.task1.domain.authorisation.getUserId
-import com.example.task1.features.mainpage.ui.QuizAdapter
+import com.example.task1.features.mainpage.ui.adapter.QuizAdapter
 import kotlinx.coroutines.launch
 
 class AccountFragment : Fragment() {

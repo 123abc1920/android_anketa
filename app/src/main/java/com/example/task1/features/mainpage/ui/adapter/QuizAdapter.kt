@@ -1,4 +1,4 @@
-package com.example.task1.features.mainpage.ui
+package com.example.task1.features.mainpage.ui.adapter
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -56,7 +56,7 @@ class QuizAdapter(
 
     override fun getItemCount(): Int = quizzes?.size ?: 0
 
-    fun updateQuizzes(newQuizzes: List<Quiz>) {
+    fun updateQuizzes(newQuizzes: MutableList<Quiz>) {
         this.quizzes = newQuizzes
         notifyDataSetChanged()
     }

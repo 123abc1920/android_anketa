@@ -1,5 +1,6 @@
-package com.example.task1.features.editcreate.domain
+package com.example.task1.domain.initdatepickers
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
@@ -9,6 +10,7 @@ import java.util.Calendar
 
 object InitDatePickers {
 
+    @SuppressLint("ClickableViewAccessibility", "DefaultLocale")
     fun InitDatePicker(datePicker: EditText, context: Context) {
         datePicker.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
@@ -18,7 +20,7 @@ object InitDatePickers {
                         TimePickerDialog(
                             context, { _, hour, minute ->
                                 val dateStr = String.format(
-                                    "%04d-%02d-%02d %02d:%02d:00",
+                                    "%04d-%02d-%02dT%02d:%02d",
                                     year, month + 1, day, hour, minute
                                 )
                                 datePicker.setText(dateStr)

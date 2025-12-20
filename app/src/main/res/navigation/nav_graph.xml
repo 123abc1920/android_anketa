@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.task1.features.mainpage.ui.MainFragment"
+        android:name="com.example.task1.features.mainpage.ui.fragment.MainFragment"
         android:label="Anketa"
         tools:layout="@layout/fragment_main" />
 
@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/quizFragment"
-        android:name="com.example.task1.features.runquiz.ui.QuizFragment"
+        android:name="com.example.task1.features.runquiz.ui.fragment.QuizFragment"
         android:label=""
         tools:layout="@layout/fragment_quiz"/>
 
