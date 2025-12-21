@@ -4,7 +4,7 @@ data class QuestionInWatch(
     val question_text: String,
     val id: String,
     val required: String,
-    val answers: List<String>,
+    val answers: MutableList<String>,
     val statistics: List<Int>?
 )
 

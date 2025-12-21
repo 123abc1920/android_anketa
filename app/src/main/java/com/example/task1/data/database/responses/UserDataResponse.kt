@@ -7,6 +7,6 @@ data class UserDataResponse(
     val username: String? = null,
     val login: String?,
     val user_id: String? = null,
-    val created_quizes: List<Quiz>?,
-    val done_quizes: List<Quiz>?
+    val created_quizes: MutableList<Quiz>?,
+    val done_quizes: MutableList<Quiz>?
 )

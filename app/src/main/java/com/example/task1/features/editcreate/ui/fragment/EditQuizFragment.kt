@@ -9,24 +9,18 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
-import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.database.responses.AnswerRequest
 import com.example.task1.data.database.responses.EditQuizRequest
 import com.example.task1.data.database.responses.Question
 import com.example.task1.data.database.responses.QuestionRequest
 import com.example.task1.domain.initdatepickers.InitDatePickers
-import com.example.task1.features.editcreate.domain.loadQuizData
-import com.example.task1.features.editcreate.domain.sendCreatedQuiz
+import com.example.task1.features.editcreate.domain.Requests
 import com.example.task1.features.editcreate.ui.adapter.EditQuizAdapter
-import kotlinx.coroutines.launch
-import kotlin.compareTo
 import kotlin.random.Random
 import kotlin.toString
 
@@ -36,6 +30,8 @@ class EditQuizFragment : Fragment() {
     private lateinit var createdQuestionAdapter: EditQuizAdapter
 
     private var questions = mutableListOf<Question>()
+
+    private val requests = Requests()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +51,7 @@ class EditQuizFragment : Fragment() {
         createdQuestionView.adapter = createdQuestionAdapter
         createdQuestionView.layoutManager = LinearLayoutManager(requireContext())
 
-        val quizData = loadQuizData(viewLifecycleOwner, findNavController(), quizId)
+        val quizData = requests.loadQuizData(viewLifecycleOwner, findNavController(), quizId)
 
         view.findViewById<TextView>(R.id.quiz_name).text = quizData.get("quizName").toString()
         view.findViewById<EditText>(R.id.start_date).setText(quizData.get("startDate").toString())
@@ -74,7 +70,12 @@ class EditQuizFragment : Fragment() {
 
         view.findViewById<Button>(R.id.send_created_quiz).setOnClickListener {
             val editQuiz = createEditQuiz(quizId.toString(), view)
-            sendCreatedQuiz(viewLifecycleOwner, requireContext(), findNavController(), editQuiz)
+            requests.sendCreatedQuiz(
+                viewLifecycleOwner,
+                requireContext(),
+                findNavController(),
+                editQuiz
+            )
         }
 
         return view

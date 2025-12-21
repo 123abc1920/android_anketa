@@ -17,10 +17,8 @@ import com.example.task1.R
 import com.example.task1.data.database.requests.Filter
 import com.example.task1.data.database.requests.SearchQuizRequest
 import com.example.task1.domain.initdatepickers.InitDatePickers
-import com.example.task1.features.mainpage.domain.loadQuizzes
-import com.example.task1.features.mainpage.domain.runQuiz
-import com.example.task1.features.mainpage.domain.search
-import com.example.task1.features.mainpage.domain.watchQuiz
+import com.example.task1.features.mainpage.domain.Navigate
+import com.example.task1.features.mainpage.domain.Requests
 import com.example.task1.features.mainpage.ui.adapter.QuizAdapter
 
 class MainFragment : Fragment() {
@@ -31,6 +29,9 @@ class MainFragment : Fragment() {
     private var currentPage = 1
     private var isSearch = false
 
+    private val requests = Requests()
+    private val navigate = Navigate()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,9 +40,14 @@ class MainFragment : Fragment() {
 
         fun load() {
             if (isSearch) {
-                quizAdapter.updateQuizzes(search(viewLifecycleOwner, createSearchQuizRequest(view)))
+                quizAdapter.updateQuizzes(
+                    requests.search(
+                        viewLifecycleOwner,
+                        createSearchQuizRequest(view)
+                    )
+                )
             } else {
-                quizAdapter.updateQuizzes(loadQuizzes(viewLifecycleOwner, currentPage))
+                quizAdapter.updateQuizzes(requests.loadQuizzes(viewLifecycleOwner, currentPage))
             }
         }
 
@@ -50,7 +56,7 @@ class MainFragment : Fragment() {
         recyclerView.adapter = quizAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        loadQuizzes(viewLifecycleOwner, currentPage)
+        requests.loadQuizzes(viewLifecycleOwner, currentPage)
 
         val prevBtn = view.findViewById<ImageButton>(R.id.prev)
         prevBtn.setOnClickListener {
@@ -76,16 +82,16 @@ class MainFragment : Fragment() {
 
         val quizLink = view.findViewById<EditText>(R.id.quiz_link)
         view.findViewById<Button>(R.id.run_quiz_link).setOnClickListener {
-            runQuiz(findNavController(), quizLink.text.toString())
+            navigate.runQuiz(findNavController(), quizLink.text.toString())
         }
         view.findViewById<Button>(R.id.watch_quiz_link).setOnClickListener {
-            watchQuiz(findNavController(), quizLink.text.toString())
+            navigate.watchQuiz(findNavController(), quizLink.text.toString())
         }
 
         view.findViewById<ImageButton>(R.id.find_btn).setOnClickListener {
             currentPage = 1
             isSearch = true
-            search(
+            requests.search(
                 viewLifecycleOwner,
                 createSearchQuizRequest(view)
             )

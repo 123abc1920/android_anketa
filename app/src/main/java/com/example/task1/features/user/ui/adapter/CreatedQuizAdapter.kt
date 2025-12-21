@@ -1,27 +1,26 @@
-package com.example.task1.features.user.ui
+package com.example.task1.features.user.ui.adapter
 
-import android.os.Bundle
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
-import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.api.models.Quiz
-import com.example.task1.data.database.responses.ResultResponse
-import kotlinx.coroutines.launch
+import androidx.navigation.findNavController
+import com.example.task1.features.user.domain.Requests
 
 class CreatedQuizAdapter(
-    private var quizzes: MutableList<Quiz>?,
-    private val lifecycleOwner: LifecycleOwner
+    private var quizzes: MutableList<Quiz>?
 ) : RecyclerView.Adapter<CreatedQuizAdapter.QuizViewHolder>() {
+
+    val navigation = com.example.task1.features.user.domain.Navigation()
+    val requests = Requests()
 
     class QuizViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val quizName: TextView = itemView.findViewById(R.id.quiz_name)
@@ -45,46 +44,35 @@ class CreatedQuizAdapter(
 
         holder.quizName.text = quiz?.quiz_name
         holder.authorName.text = "${quiz?.author_name}"
-        holder.date.text = "${formatDate(quiz?.end_date)}"
+        holder.date.text = formatDate(quiz?.end_date)
 
         holder.runQuiz.setOnClickListener {
             quiz?.crypted_link?.let { quizId ->
-                val bundle = Bundle().apply {
-                    putString("quizId", quizId.toString())
-                }
-                Navigation.findNavController(holder.itemView).navigate(R.id.quizFragment, bundle)
+                navigation.runQuiz(holder.itemView.findNavController(), quizId)
             }
         }
         holder.watchQuiz.setOnClickListener {
             quiz?.crypted_link?.let { quizId ->
-                val bundle = Bundle().apply {
-                    putString("quizId", quizId.toString())
-                }
-                Navigation.findNavController(holder.itemView).navigate(R.id.watchFragment, bundle)
+                navigation.watchQuiz(holder.itemView.findNavController(), quizId)
             }
+
         }
 
         holder.deleteBtn.setOnClickListener {
-            val adapterPosition = position
-            if (adapterPosition != RecyclerView.NO_POSITION) {
-                var response: ResultResponse = ResultResponse("unsuccess")
-                lifecycleOwner.lifecycleScope.launch {
-                    response = RetrofitClient.apiService.deleteQuiz(mapOf("id" to quiz?.id))
-                    if (response.result == "success") {
-                        Toast.makeText(holder.context, "Анкета удалена!", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
-                quizzes?.remove(quiz)
-                notifyItemRemoved(position)
-            }
+            deleteQuiz(
+                position,
+                holder.itemView.findViewTreeLifecycleOwner(),
+                holder.itemView.context
+            )
         }
 
         holder.editBtn.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString("quizId", quiz?.crypted_link.toString())
+            quiz?.crypted_link?.let { quizId ->
+                navigation.editQuiz(
+                    holder.itemView.findNavController(),
+                    quiz.crypted_link.toString()
+                )
             }
-            Navigation.findNavController(holder.itemView).navigate(R.id.editQuizFragment, bundle)
         }
     }
 
@@ -94,6 +82,19 @@ class CreatedQuizAdapter(
         return if (dateString.isNullOrEmpty()) "не указана"
         else {
             dateString
+        }
+    }
+
+    fun deleteQuiz(position: Int, owner: LifecycleOwner?, context: Context) {
+        if (owner != null) {
+            val adapterPosition = position
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                val result = requests.deleteQuiz(owner, context, quizzes?.get(position)?.id)
+                if (result) {
+                    quizzes?.removeAt(position)
+                    notifyItemRemoved(position)
+                }
+            }
         }
     }
 }

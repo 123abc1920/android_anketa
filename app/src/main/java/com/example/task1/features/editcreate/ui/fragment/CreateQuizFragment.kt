@@ -8,30 +8,26 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
-import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.api.models.Question
 import com.example.task1.data.database.models.AnswerInCreateQuiz
 import com.example.task1.data.database.models.QuestionInQuiz
 import com.example.task1.data.database.responses.CreateQuizResponse
-import com.example.task1.domain.authorisation.getUserId
 import com.example.task1.domain.initdatepickers.InitDatePickers
-import com.example.task1.features.editcreate.domain.collectQuestions
-import com.example.task1.features.editcreate.domain.createQuiz
+import com.example.task1.features.editcreate.domain.Requests
 import com.example.task1.features.editcreate.ui.adapter.CreateQuizAdapter
-import kotlinx.coroutines.launch
 
 class CreateQuizFragment : Fragment() {
     private lateinit var createdQuestionView: RecyclerView
     private lateinit var createdQuestionAdapter: CreateQuizAdapter
 
     private var questions = mutableListOf<QuestionInQuiz>()
+
+    private val requests = Requests()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,9 +65,49 @@ class CreateQuizFragment : Fragment() {
                 collectQuestions(createdQuestionView)
             )
 
-            createQuiz(viewLifecycleOwner, findNavController(), requireContext(), createdQuiz)
+            requests.createQuiz(
+                viewLifecycleOwner,
+                findNavController(),
+                requireContext(),
+                createdQuiz
+            )
         }
 
         return view
+    }
+
+    private fun collectQuestions(createdQuestionView: RecyclerView): MutableList<Question> {
+        val questionsList = mutableListOf<Question>()
+
+        for (i in 0 until createdQuestionView.childCount) {
+            val questionView = createdQuestionView.getChildAt(i)
+
+            val questionName =
+                questionView.findViewById<EditText>(R.id.question_name).text.toString()
+            val isRequired = questionView.findViewById<CheckBox>(R.id.is_required).isChecked
+
+            val answersRecyclerView = questionView.findViewById<RecyclerView>(R.id.answers_view)
+            val answersList = mutableListOf<AnswerInCreateQuiz>()
+
+            for (j in 0 until answersRecyclerView.childCount) {
+                val answerView = answersRecyclerView.getChildAt(j)
+                val answerText =
+                    answerView.findViewById<EditText>(R.id.answer_text).text.toString()
+
+                if (answerText.isNotEmpty()) {
+                    answersList.add(AnswerInCreateQuiz(answerText))
+                }
+            }
+
+            questionsList.add(
+                Question(
+                    questionName,
+                    isRequired,
+                    answersList
+                )
+            )
+        }
+
+        return questionsList
     }
 }

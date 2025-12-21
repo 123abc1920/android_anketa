@@ -13,13 +13,13 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.task1.features.user.ui.LoginFragment"
+        android:name="com.example.task1.features.user.ui.fragment.LoginFragment"
         android:label=""
         tools:layout="@layout/fragment_login" />
 
     <fragment
         android:id="@+id/accountFragment"
-        android:name="com.example.task1.features.user.ui.AccountFragment"
+        android:name="com.example.task1.features.user.ui.fragment.AccountFragment"
         android:label=""
         tools:layout="@layout/fragment_account" />
 
@@ -31,7 +31,7 @@
 
     <fragment
         android:id="@+id/watchFragment"
-        android:name="com.example.task1.features.watch.ui.WatchFragment"
+        android:name="com.example.task1.features.watch.ui.fragment.WatchFragment"
         android:label=""
         tools:layout="@layout/fragment_watch"/>
 
@@ -43,7 +43,7 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.task1.features.settings.ui.SettingsFragment"
+        android:name="com.example.task1.features.settings.ui.fragment.SettingsFragment"
         android:label=""
         tools:layout="@layout/fragment_settings"/>
 
