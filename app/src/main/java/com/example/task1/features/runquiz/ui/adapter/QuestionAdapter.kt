@@ -12,6 +12,7 @@ import com.example.task1.R
 import com.example.task1.data.database.models.AnswerInQuiz
 import com.example.task1.data.database.models.QuestionAnswer
 import com.example.task1.data.database.models.QuestionInQuiz
+import com.example.task1.data.database.responses.AnswerRequest
 
 class QuestionAdapter(
     private var questions: MutableList<QuestionInQuiz>?
@@ -93,5 +94,11 @@ class QuestionAdapter(
             }
             holder.answersRadioGroup.addView(radioButton)
         }
+    }
+
+    fun updateQuestions(newList: List<QuestionInQuiz>) {
+        questions?.clear()
+        questions?.addAll(newList)
+        notifyDataSetChanged()
     }
 }

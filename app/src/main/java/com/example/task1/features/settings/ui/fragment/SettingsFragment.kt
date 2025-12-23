@@ -8,48 +8,54 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.task1.R
 import com.example.task1.features.settings.domain.Requests
+import kotlinx.coroutines.launch
 
 class SettingsFragment : Fragment() {
 
     private val requests = Requests()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var view = inflater.inflate(R.layout.fragment_settings, container, false)
+        val view = inflater.inflate(R.layout.fragment_settings, container, false)
 
-        val result = requests.loadUserData(viewLifecycleOwner)
-        view.findViewById<ConstraintLayout>(R.id.for_logged).visibility =
-            result.get("result") as Int
-        view.findViewById<EditText>(R.id.name_text).setText(result.get("username").toString())
-        view.findViewById<EditText>(R.id.login_text).setText(result.get("login").toString())
+        viewLifecycleOwner.lifecycleScope.launch {
+            val result = requests.loadUserData()
+
+            if (isAdded) {
+                view.findViewById<ConstraintLayout>(R.id.for_logged).visibility =
+                    result["result"] as Int
+                view.findViewById<EditText>(R.id.name_text).setText(result["username"].toString())
+                view.findViewById<EditText>(R.id.login_text).setText(result["login"].toString())
+            }
+        }
 
         view.findViewById<Button>(R.id.save_userdata).setOnClickListener {
-            requests.saveUserData(
-                viewLifecycleOwner,
-                requireContext(),
-                view.findViewById<EditText>(R.id.login_text).text.toString(),
-                view.findViewById<EditText>(R.id.name_text).text.toString()
-            )
+            viewLifecycleOwner.lifecycleScope.launch {
+                requests.saveUserData(
+                    requireContext(),
+                    view.findViewById<EditText>(R.id.login_text).text.toString(),
+                    view.findViewById<EditText>(R.id.name_text).text.toString()
+                )
+            }
         }
 
         view.findViewById<Button>(R.id.save_password).setOnClickListener {
-            val isSuccess = requests.savePassword(
-                viewLifecycleOwner,
-                requireContext(),
-                view.findViewById<EditText>(R.id.password_old).text.toString(),
-                view.findViewById<EditText>(R.id.password_new).text.toString()
-            )
-            if (isSuccess) {
-                view.findViewById<EditText>(R.id.password_old).setText("")
-                view.findViewById<EditText>(R.id.password_new).setText("")
+            viewLifecycleOwner.lifecycleScope.launch {
+                val isSuccess = requests.savePassword(
+                    requireContext(),
+                    view.findViewById<EditText>(R.id.password_old).text.toString(),
+                    view.findViewById<EditText>(R.id.password_new).text.toString()
+                )
+
+                if (isSuccess) {
+                    view.findViewById<EditText>(R.id.password_old).setText("")
+                    view.findViewById<EditText>(R.id.password_new).setText("")
+                }
             }
         }
 

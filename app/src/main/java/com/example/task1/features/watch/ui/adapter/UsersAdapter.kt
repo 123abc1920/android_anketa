@@ -30,4 +30,10 @@ class UsersAdapter(
     }
 
     override fun getItemCount(): Int = users?.size ?: 0
+
+    fun updateUsers(newList: List<String>) {
+        users?.clear()
+        users?.addAll(newList)
+        notifyDataSetChanged()
+    }
 }

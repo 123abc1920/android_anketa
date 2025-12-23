@@ -9,11 +9,14 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.api.models.Quiz
 import androidx.navigation.findNavController
+import com.example.task1.domain.dialogs.showConfirmDialog
 import com.example.task1.features.user.domain.Requests
+import kotlinx.coroutines.launch
 
 class CreatedQuizAdapter(
     private var quizzes: MutableList<Quiz>?
@@ -59,11 +62,19 @@ class CreatedQuizAdapter(
         }
 
         holder.deleteBtn.setOnClickListener {
-            deleteQuiz(
-                position,
-                holder.itemView.findViewTreeLifecycleOwner(),
-                holder.itemView.context
-            )
+            showConfirmDialog(
+                holder.context,
+                "Удалить эту анкету?",
+                "Это действие нельзя будет отменить",
+                { result ->
+                    if (result) {
+                        deleteQuiz(
+                            position,
+                            holder.itemView.findViewTreeLifecycleOwner(),
+                            holder.itemView.context
+                        )
+                    }
+                })
         }
 
         holder.editBtn.setOnClickListener {
@@ -89,10 +100,12 @@ class CreatedQuizAdapter(
         if (owner != null) {
             val adapterPosition = position
             if (adapterPosition != RecyclerView.NO_POSITION) {
-                val result = requests.deleteQuiz(owner, context, quizzes?.get(position)?.id)
-                if (result) {
-                    quizzes?.removeAt(position)
-                    notifyItemRemoved(position)
+                owner.lifecycleScope.launch {
+                    val result = requests.deleteQuiz(context, quizzes?.get(position)?.id)
+                    if (result) {
+                        quizzes?.removeAt(position)
+                        notifyItemRemoved(position)
+                    }
                 }
             }
         }

@@ -69,4 +69,8 @@ class CreateQuizAdapter(
             notifyItemRemoved(position)
         }
     }
+
+    fun getQuestions(): MutableList<QuestionInQuiz>? {
+        return questions
+    }
 }

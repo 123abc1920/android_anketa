@@ -83,4 +83,8 @@ class EditQuizAdapter(
             notifyItemRemoved(adapterPosition)
         }
     }
+
+    fun getQuestions(): List<Question> {
+        return questions
+    }
 }

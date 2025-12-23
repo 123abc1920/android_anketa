@@ -10,16 +10,19 @@ import android.widget.EditText
 import android.widget.ImageButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
+import com.example.task1.data.api.models.Quiz
 import com.example.task1.data.database.requests.Filter
 import com.example.task1.data.database.requests.SearchQuizRequest
 import com.example.task1.domain.initdatepickers.InitDatePickers
 import com.example.task1.features.mainpage.domain.Navigate
 import com.example.task1.features.mainpage.domain.Requests
 import com.example.task1.features.mainpage.ui.adapter.QuizAdapter
+import kotlinx.coroutines.launch
 
 class MainFragment : Fragment() {
 
@@ -39,24 +42,22 @@ class MainFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_main, container, false)
 
         fun load() {
-            if (isSearch) {
-                quizAdapter.updateQuizzes(
-                    requests.search(
-                        viewLifecycleOwner,
-                        createSearchQuizRequest(view)
-                    )
-                )
-            } else {
-                quizAdapter.updateQuizzes(requests.loadQuizzes(viewLifecycleOwner, currentPage))
+            viewLifecycleOwner.lifecycleScope.launch {
+                val quizzes = if (isSearch) {
+                    requests.search(createSearchQuizRequest(view))
+                } else {
+                    requests.loadQuizzes(currentPage)
+                }
+                quizAdapter.updateQuizzes(quizzes as MutableList<Quiz>)
             }
         }
 
+        load()
+
         recyclerView = view.findViewById(R.id.quiz_view)
-        quizAdapter = QuizAdapter(emptyList())
+        quizAdapter = QuizAdapter(mutableListOf())
         recyclerView.adapter = quizAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        requests.loadQuizzes(viewLifecycleOwner, currentPage)
 
         val prevBtn = view.findViewById<ImageButton>(R.id.prev)
         prevBtn.setOnClickListener {
@@ -91,10 +92,7 @@ class MainFragment : Fragment() {
         view.findViewById<ImageButton>(R.id.find_btn).setOnClickListener {
             currentPage = 1
             isSearch = true
-            requests.search(
-                viewLifecycleOwner,
-                createSearchQuizRequest(view)
-            )
+            load()
         }
 
         var startDate = view.findViewById<EditText>(R.id.start_date)

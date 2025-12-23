@@ -1,6 +1,7 @@
 package com.example.task1.features.user.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,21 +9,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.task1.R
 import com.example.task1.features.user.domain.Requests
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
-
-    private lateinit var loginEditText: EditText
-    private lateinit var passwordEditText: EditText
-    private lateinit var infoText: TextView
-
-    private val request = Requests()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,35 +23,51 @@ class LoginFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
-        loginEditText = view.findViewById(R.id.login_in)
-        passwordEditText = view.findViewById(R.id.password_in)
-        infoText = view.findViewById(R.id.info_text)
+        val loginEditText = view.findViewById<EditText>(R.id.login_in)
+        val passwordEditText = view.findViewById<EditText>(R.id.password_in)
+        val infoText = view.findViewById<TextView>(R.id.info_text)
 
-        val loginBtn = view.findViewById<Button>(R.id.login_btn)
-        loginBtn.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View?) {
-                request.login(
-                    viewLifecycleOwner,
-                    findNavController(),
+        val request = Requests()
+
+        view.findViewById<Button>(R.id.login_btn).setOnClickListener {
+            viewLifecycleOwner.lifecycleScope.launch {
+                val result = request.login(
                     requireContext(),
                     loginEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
-            }
-        })
 
-        val signupBtn = view.findViewById<Button>(R.id.signup_btn)
-        signupBtn.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                request.signup(
-                    viewLifecycleOwner,
-                    findNavController(),
+                when (result) {
+                    is Requests.Result.Success -> {
+                        findNavController().navigate(R.id.accountFragment)
+                    }
+
+                    is Requests.Result.Error -> {
+                        Log.e("Login Error", result.message)
+                    }
+                }
+            }
+        }
+
+        view.findViewById<Button>(R.id.signup_btn).setOnClickListener {
+            viewLifecycleOwner.lifecycleScope.launch {
+                val result = request.signup(
                     requireContext(),
                     loginEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
+
+                when (result) {
+                    is Requests.Result.Success -> {
+                        findNavController().navigate(R.id.accountFragment)
+                    }
+
+                    is Requests.Result.Error -> {
+                        Log.e("Login Error", result.message)
+                    }
+                }
             }
-        })
+        }
 
         return view
     }

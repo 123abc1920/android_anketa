@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,14 +16,11 @@ import com.example.task1.data.api.models.Quiz
 import com.example.task1.features.mainpage.ui.adapter.QuizAdapter
 import com.example.task1.features.user.domain.Requests
 import com.example.task1.features.user.ui.adapter.CreatedQuizAdapter
+import kotlinx.coroutines.launch
 
 class AccountFragment : Fragment() {
 
     private val requests = Requests()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,19 +32,37 @@ class AccountFragment : Fragment() {
             findNavController().navigate(R.id.createFragment)
         }
 
-        val result = requests.loadUserData(viewLifecycleOwner, findNavController())
-        view.findViewById<TextView>(R.id.username).text = result.get("username").toString()
-        view.findViewById<TextView>(R.id.login).text = result.get("login").toString()
+        viewLifecycleOwner.lifecycleScope.launch {
+            when (val result = requests.loadUserData()) {
+                is Requests.Result.Success -> {
+                    if (isAdded) {
+                        val data = result.data
+                        view.findViewById<TextView>(R.id.username).text =
+                            data["username"].toString()
+                        view.findViewById<TextView>(R.id.login).text = data["login"].toString()
 
-        val createdView = view.findViewById<RecyclerView>(R.id.created_recycle)
-        val createdAdapter = CreatedQuizAdapter(result.get("createdQuizzes") as MutableList<Quiz>)
-        createdView.adapter = createdAdapter
-        createdView.layoutManager = LinearLayoutManager(requireContext())
+                        val createdView = view.findViewById<RecyclerView>(R.id.created_recycle)
+                        val createdQuizzes =
+                            data["createdQuizzes"] as? List<Quiz> ?: mutableListOf()
+                        val createdAdapter = CreatedQuizAdapter(createdQuizzes.toMutableList())
+                        createdView.adapter = createdAdapter
+                        createdView.layoutManager = LinearLayoutManager(requireContext())
 
-        val doneView = view.findViewById<RecyclerView>(R.id.done_recycle)
-        val doneAdapter = QuizAdapter(result.get("doneQuizzes") as MutableList<Quiz>)
-        doneView.adapter = doneAdapter
-        doneView.layoutManager = LinearLayoutManager(requireContext())
+                        val doneView = view.findViewById<RecyclerView>(R.id.done_recycle)
+                        val doneQuizzes = data["doneQuizzes"] as? List<Quiz> ?: mutableListOf()
+                        val doneAdapter = QuizAdapter(doneQuizzes.toMutableList())
+                        doneView.adapter = doneAdapter
+                        doneView.layoutManager = LinearLayoutManager(requireContext())
+                    }
+                }
+
+                is Requests.Result.Error -> {
+                    if (isAdded) {
+                        findNavController().navigate(R.id.loginFragment)
+                    }
+                }
+            }
+        }
 
         return view
     }

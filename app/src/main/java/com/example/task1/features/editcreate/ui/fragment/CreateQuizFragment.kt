@@ -8,18 +8,20 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
-import com.example.task1.data.api.models.Question
-import com.example.task1.data.database.models.AnswerInCreateQuiz
 import com.example.task1.data.database.models.QuestionInQuiz
 import com.example.task1.data.database.responses.CreateQuizResponse
 import com.example.task1.domain.initdatepickers.InitDatePickers
+import com.example.task1.domain.toasts.showToast
 import com.example.task1.features.editcreate.domain.Requests
 import com.example.task1.features.editcreate.ui.adapter.CreateQuizAdapter
+import kotlinx.coroutines.launch
 
 class CreateQuizFragment : Fragment() {
     private lateinit var createdQuestionView: RecyclerView
@@ -62,52 +64,20 @@ class CreateQuizFragment : Fragment() {
                 view.findViewById<CheckBox>(R.id.quiz_shown).isChecked,
                 view.findViewById<EditText>(R.id.start_date).text.toString(),
                 view.findViewById<EditText>(R.id.end_date).text.toString(),
-                collectQuestions(createdQuestionView)
+                createdQuestionAdapter.getQuestions()
             )
 
-            requests.createQuiz(
-                viewLifecycleOwner,
-                findNavController(),
-                requireContext(),
-                createdQuiz
-            )
+            viewLifecycleOwner.lifecycleScope.launch {
+                val success = requests.createQuiz(createdQuiz)
+                if (success) {
+                    showToast(requireContext(), "Анкета создана!")
+                    findNavController().navigate(R.id.accountFragment)
+                } else {
+                    showToast(requireContext(), "Ошибка создания анкеты")
+                }
+            }
         }
 
         return view
-    }
-
-    private fun collectQuestions(createdQuestionView: RecyclerView): MutableList<Question> {
-        val questionsList = mutableListOf<Question>()
-
-        for (i in 0 until createdQuestionView.childCount) {
-            val questionView = createdQuestionView.getChildAt(i)
-
-            val questionName =
-                questionView.findViewById<EditText>(R.id.question_name).text.toString()
-            val isRequired = questionView.findViewById<CheckBox>(R.id.is_required).isChecked
-
-            val answersRecyclerView = questionView.findViewById<RecyclerView>(R.id.answers_view)
-            val answersList = mutableListOf<AnswerInCreateQuiz>()
-
-            for (j in 0 until answersRecyclerView.childCount) {
-                val answerView = answersRecyclerView.getChildAt(j)
-                val answerText =
-                    answerView.findViewById<EditText>(R.id.answer_text).text.toString()
-
-                if (answerText.isNotEmpty()) {
-                    answersList.add(AnswerInCreateQuiz(answerText))
-                }
-            }
-
-            questionsList.add(
-                Question(
-                    questionName,
-                    isRequired,
-                    answersList
-                )
-            )
-        }
-
-        return questionsList
     }
 }

@@ -2,121 +2,92 @@ package com.example.task1.features.user.domain
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import com.example.task1.R
 import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.api.models.Quiz
 import com.example.task1.data.database.requests.LoginRequest
-import com.example.task1.data.database.responses.ResultResponse
 import com.example.task1.domain.authorisation.getUserIdHeader
 import com.example.task1.domain.authorisation.saveUserId
 import com.example.task1.domain.toasts.showToast
-import kotlinx.coroutines.launch
 
 class Requests {
 
-    fun login(
-        owner: LifecycleOwner,
-        navController: NavController,
+    suspend fun login(
         context: Context,
         login: String,
         password: String
-    ) {
-        owner.lifecycleScope.launch {
-            try {
-                val response =
-                    RetrofitClient.apiService.login(LoginRequest(login, password))
-                if (response.result == "success") {
-                    saveUserId(response.token.toString())
-                    navController.navigate(R.id.accountFragment)
-                } else {
-                    showToast(context, response.result)
-                }
-            } catch (e: Exception) {
-                Log.e("Login Error", "Ошибка: ${e.message}")
-                navController.navigate(R.id.loginFragment)
+    ): Result<String> {
+        return try {
+            val response = RetrofitClient.apiService.login(LoginRequest(login, password))
+            if (response.result == "success") {
+                saveUserId(response.token.toString())
+                Result.Success(response.result)
+            } else {
+                Result.Error(response.result)
             }
+        } catch (e: Exception) {
+            Log.e("Login Error", "Ошибка: ${e.message}")
+            Result.Error("Ошибка соединения")
         }
     }
 
-    fun signup(
-        owner: LifecycleOwner,
-        navController: NavController,
+    suspend fun signup(
         context: Context,
         login: String,
         password: String
-    ) {
-        owner.lifecycleScope.launch {
-            try {
-                val response =
-                    RetrofitClient.apiService.signup(LoginRequest(login, password))
-                if (response.result == "success") {
-                    saveUserId(response.token.toString())
-                    navController.navigate(R.id.accountFragment)
-                } else {
-                    showToast(context, response.result)
-                }
-            } catch (e: Exception) {
-                Log.e("Signup Error", "Ошибка: ${e.message}")
-                navController.navigate(R.id.loginFragment)
+    ): Result<String> {
+        return try {
+            val response = RetrofitClient.apiService.signup(LoginRequest(login, password))
+            if (response.result == "success") {
+                saveUserId(response.token.toString())
+                Result.Success(response.result)
+            } else {
+                Result.Error(response.result)
             }
+        } catch (e: Exception) {
+            Log.e("Signup Error", "Ошибка: ${e.message}")
+            Result.Error("Ошибка соединения")
         }
     }
 
-    fun loadUserData(
-        owner: LifecycleOwner,
-        navController: NavController
-    ): Map<String, Any> {
-        var map = mapOf<String, Any>(
-            "username" to "",
-            "login" to "",
-            "createdQuizzes" to mutableListOf<Quiz>(),
-            "doneQuiz" to mutableListOf<Quiz>()
-        )
+    suspend fun loadUserData(): Result<Map<String, Any>> {
+        return try {
+            val response = RetrofitClient.apiService.getUserData(getUserIdHeader())
 
-        owner.lifecycleScope.launch {
-            try {
-                val response = RetrofitClient.apiService.getUserData(
-                    getUserIdHeader()
-                )
-
-                if (response.result == "success") {
-                    map = mapOf<String, Any>(
-                        "username" to response.username.toString(),
-                        "login" to response.login.toString(),
-                        "createdQuizzes" to response.created_quizes as MutableList<Quiz>,
-                        "doneQuizzes" to response.done_quizes as MutableList<Quiz>
-                    )
-                }
-            } catch (e: Exception) {
-                Log.e("Account Error", "Ошибка загрузки данных пользователя", e)
-                navController.navigate(R.id.loginFragment)
+            if (response.result == "success") {
+                Result.Success(mapOf<String, Any>(
+                    "username" to response.username.toString(),
+                    "login" to response.login.toString(),
+                    "createdQuizzes" to (response.created_quizes as? List<Quiz> ?: mutableListOf<Quiz>()),
+                    "doneQuizzes" to (response.done_quizes as? List<Quiz> ?: mutableListOf<Quiz>())
+                ))
+            } else {
+                Result.Error("Ошибка загрузки данных")
             }
+        } catch (e: Exception) {
+            Log.e("Account Error", "Ошибка загрузки данных пользователя", e)
+            Result.Error("Ошибка соединения")
         }
-
-        return map
     }
 
-    fun deleteQuiz(owner: LifecycleOwner, context: Context, quizId: Int?): Boolean {
-        var success = true
+    suspend fun deleteQuiz(context: Context, quizId: Int?): Boolean {
+        if (quizId == null) return false
 
-        if (quizId == null) {
-            return false
-        }
-
-        owner.lifecycleScope.launch {
-            var response = ResultResponse("unsuccess")
-            response = RetrofitClient.apiService.deleteQuiz(mapOf("id" to quizId))
+        return try {
+            val response = RetrofitClient.apiService.deleteQuiz(mapOf("id" to quizId))
             if (response.result == "success") {
                 showToast(context, "Анкета удалена!")
+                true
             } else {
-                success = false
+                false
             }
+        } catch (e: Exception) {
+            Log.e("Delete Error", "Ошибка удаления анкеты", e)
+            false
         }
-
-        return success
     }
 
+    sealed class Result<T> {
+        data class Success<T>(val data: T) : Result<T>()
+        data class Error<T>(val message: String) : Result<T>()
+    }
 }

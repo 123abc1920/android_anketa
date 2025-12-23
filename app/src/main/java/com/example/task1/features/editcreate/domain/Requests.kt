@@ -1,95 +1,66 @@
 package com.example.task1.features.editcreate.domain
 
-import android.content.Context
 import android.util.Log
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.Toast
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import androidx.recyclerview.widget.RecyclerView
-import com.example.task1.R
 import com.example.task1.data.api.RetrofitClient
-import com.example.task1.data.api.models.Question
-import com.example.task1.data.database.models.AnswerInCreateQuiz
 import com.example.task1.data.database.responses.CreateQuizResponse
 import com.example.task1.data.database.responses.EditQuizRequest
-import com.example.task1.domain.authorisation.getUserId
-import kotlinx.coroutines.launch
+import com.example.task1.data.database.responses.Question
+import com.example.task1.domain.authorisation.getUserIdHeader
 
 class Requests {
 
-    fun createQuiz(
-        owner: LifecycleOwner,
-        navController: NavController,
-        context: Context,
-        createdQuiz: CreateQuizResponse
-    ) {
-        owner.lifecycleScope.launch {
+    suspend fun createQuiz(createdQuiz: CreateQuizResponse): Boolean {
+        return try {
             val response = RetrofitClient.apiService.createQuiz(
-                "Bearer ${getUserId()}", createdQuiz
+                getUserIdHeader(), createdQuiz
             )
-            if (response.result == "success") {
-                navController.navigate(R.id.accountFragment)
-                Toast.makeText(context, "Анкета создана!", Toast.LENGTH_SHORT)
-                    .show()
-            }
+            response.result == "success"
+        } catch (e: Exception) {
+            Log.e("API ERROR", "Ошибка создания анкеты", e)
+            false
         }
     }
 
-    fun loadQuizData(
-        owner: LifecycleOwner,
-        navController: NavController,
-        quizId: String?
-    ): Map<String, Any> {
-        var quizName: String = ""
-        var startData: String = ""
-        var endData: String = ""
-        var questinList: MutableList<com.example.task1.data.database.responses.Question> =
-            mutableListOf()
+    suspend fun loadQuizData(quizId: String?): Map<String, Any> {
+        return try {
+            if (quizId != null) {
+                val response = RetrofitClient.apiService.getQuizData(
+                    getUserIdHeader(),
+                    quizId
+                )
 
-        if (quizId != null) {
-            owner.lifecycleScope.launch {
-                try {
-                    val response = RetrofitClient.apiService.getQuizData(
-                        "Bearer ${getUserId()}",
-                        quizId
-                    )
-
-                    quizName = response.quiz_name
-                    startData = response.start_date
-                    endData = response.end_date
-                    questinList = response.questions_list
-                } catch (e: Exception) {
-                    Log.e("API ERROR", "Ошибка загрузки анкеты", e)
-                    navController.navigate(R.id.accountFragment)
-                }
+                mapOf<String, Any>(
+                    "quizName" to response.quiz_name,
+                    "startData" to response.start_date,
+                    "endData" to response.end_date,
+                    "questionList" to response.questions_list
+                )
+            } else {
+                mapOf<String, Any>(
+                    "quizName" to "",
+                    "startData" to "",
+                    "endData" to "",
+                    "questionList" to mutableListOf<Question>()
+                )
             }
+        } catch (e: Exception) {
+            Log.e("API ERROR", "Ошибка загрузки анкеты", e)
+            mapOf<String, Any>(
+                "quizName" to "",
+                "startData" to "",
+                "endData" to "",
+                "questionList" to mutableListOf<Question>()
+            )
         }
-
-        return mapOf<String, Any>(
-            "quizName" to quizName,
-            "startData" to startData,
-            "endData" to endData,
-            "questionList" to questinList
-        )
     }
 
-    fun sendCreatedQuiz(
-        owner: LifecycleOwner,
-        context: Context,
-        navController: NavController,
-        editQuizRequest: EditQuizRequest
-    ) {
-        owner.lifecycleScope.launch {
-            val response = RetrofitClient.apiService.editQuiz(
-                editQuizRequest
-            )
-            if (response.result == "success") {
-                navController.navigate(R.id.accountFragment)
-                Toast.makeText(context, "Анкета обновлена!", Toast.LENGTH_SHORT).show()
-            }
+    suspend fun sendCreatedQuiz(editQuizRequest: EditQuizRequest): Boolean {
+        return try {
+            val response = RetrofitClient.apiService.editQuiz(editQuizRequest)
+            response.result == "success"
+        } catch (e: Exception) {
+            Log.e("API ERROR", "Ошибка обновления анкеты", e)
+            false
         }
     }
 }

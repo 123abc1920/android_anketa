@@ -10,6 +10,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,8 +20,10 @@ import com.example.task1.data.database.responses.EditQuizRequest
 import com.example.task1.data.database.responses.Question
 import com.example.task1.data.database.responses.QuestionRequest
 import com.example.task1.domain.initdatepickers.InitDatePickers
+import com.example.task1.domain.toasts.showToast
 import com.example.task1.features.editcreate.domain.Requests
 import com.example.task1.features.editcreate.ui.adapter.EditQuizAdapter
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 import kotlin.toString
 
@@ -51,12 +54,22 @@ class EditQuizFragment : Fragment() {
         createdQuestionView.adapter = createdQuestionAdapter
         createdQuestionView.layoutManager = LinearLayoutManager(requireContext())
 
-        val quizData = requests.loadQuizData(viewLifecycleOwner, findNavController(), quizId)
+        viewLifecycleOwner.lifecycleScope.launch {
+            val quizData = requests.loadQuizData(quizId)
 
-        view.findViewById<TextView>(R.id.quiz_name).text = quizData.get("quizName").toString()
-        view.findViewById<EditText>(R.id.start_date).setText(quizData.get("startDate").toString())
-        view.findViewById<EditText>(R.id.end_date).setText(quizData.get("endDate").toString())
-        createdQuestionAdapter.updateQuestions(quizData.get("questionList") as MutableList<Question>)
+            if (isAdded) {
+                view.findViewById<TextView>(R.id.quiz_name).text =
+                    quizData.get("quizName").toString()
+                view.findViewById<EditText>(R.id.start_date)
+                    .setText(quizData.get("startData").toString())
+                view.findViewById<EditText>(R.id.end_date)
+                    .setText(quizData.get("endData").toString())
+                val questionList = quizData.get("questionList") as? List<Question>
+                if (questionList != null) {
+                    createdQuestionAdapter.updateQuestions(questionList.toMutableList())
+                }
+            }
+        }
 
         view.findViewById<Button>(R.id.add_question_btn).setOnClickListener {
             createdQuestionAdapter.addQuestion()
@@ -69,42 +82,41 @@ class EditQuizFragment : Fragment() {
         InitDatePickers.InitDatePicker(endDate, requireContext())
 
         view.findViewById<Button>(R.id.send_created_quiz).setOnClickListener {
-            val editQuiz = createEditQuiz(quizId.toString(), view)
-            requests.sendCreatedQuiz(
-                viewLifecycleOwner,
-                requireContext(),
-                findNavController(),
-                editQuiz
-            )
+            val quizIdArg = arguments?.getString("quizId") ?: ""
+            val editQuiz = createEditQuiz(quizIdArg, view)
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                val success = requests.sendCreatedQuiz(editQuiz)
+                if (success) {
+                    showToast(requireContext(), "Анкета обновлена!")
+                    findNavController().navigate(R.id.accountFragment)
+                } else {
+                    showToast(requireContext(), "Ошибка обновления анкеты")
+                }
+            }
         }
 
         return view
     }
 
     private fun createEditQuiz(quizId: String, view: View): EditQuizRequest {
+        val currentQuestions = createdQuestionAdapter.getQuestions()
+
         return EditQuizRequest(
-            quizId ?: "",
+            quizId,
             view.findViewById<EditText>(R.id.quiz_name).text.toString(),
             view.findViewById<CheckBox>(R.id.author_shown).isChecked,
             view.findViewById<CheckBox>(R.id.quiz_shown).isChecked,
             view.findViewById<EditText>(R.id.start_date).text.toString(),
             view.findViewById<EditText>(R.id.end_date).text.toString(),
-            questions.map { question ->
+            currentQuestions.map { question ->
                 QuestionRequest(
-                    if (question.id.isNotEmpty()) question.id else "new-${
-                        Random.Default.nextInt(
-                            100000
-                        )
-                    }",
+                    if (question.id.isNotEmpty()) question.id else "new-${Random.nextInt(100000)}",
                     question.question_text,
-                    false,
+                    true,
                     question.answers.map { answer ->
                         AnswerRequest(
-                            if (answer.id > 0) answer.id.toString() else "new-${
-                                Random.Default.nextInt(
-                                    100000
-                                )
-                            }",
+                            (if (answer.id != null) answer.id else "new-${Random.nextInt(100000)}").toString(),
                             answer.text
                         )
                     }

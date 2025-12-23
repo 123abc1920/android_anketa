@@ -53,4 +53,10 @@ class WatchQuestionAdapter(
     }
 
     override fun getItemCount(): Int = questions?.size ?: 0
+
+    fun updateQuestions(newList: List<QuestionInWatch>) {
+        questions?.clear()
+        questions?.addAll(newList)
+        notifyDataSetChanged()
+    }
 }
