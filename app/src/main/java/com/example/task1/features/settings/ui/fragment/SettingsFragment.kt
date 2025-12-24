@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.task1.R
 import com.example.task1.features.settings.domain.SettingsRequests
+import com.example.task1.features.settings.ui.vm.SettingsVM
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 

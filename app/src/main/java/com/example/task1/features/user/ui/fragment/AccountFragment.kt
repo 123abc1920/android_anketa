@@ -17,6 +17,7 @@ import com.example.task1.features.mainpage.ui.adapter.QuizAdapter
 import com.example.task1.features.user.domain.UserNavigation
 import com.example.task1.features.user.domain.UserRequests
 import com.example.task1.features.user.ui.adapter.CreatedQuizAdapter
+import com.example.task1.features.user.ui.vm.AccountVM
 import org.koin.android.ext.android.inject
 
 class AccountFragment : Fragment() {

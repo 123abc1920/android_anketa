@@ -17,6 +17,7 @@ import com.example.task1.common.toasts.showToast
 import com.example.task1.features.watch.domain.WatchRequests
 import com.example.task1.features.watch.ui.adapter.UsersAdapter
 import com.example.task1.features.watch.ui.adapter.WatchQuestionAdapter
+import com.example.task1.features.watch.ui.vm.WatchVM
 import org.koin.android.ext.android.inject
 
 class WatchFragment : Fragment() {

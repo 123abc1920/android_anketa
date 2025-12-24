@@ -23,6 +23,7 @@ import com.example.task1.features.editcreate.domain.EditRequests
 import com.example.task1.features.editcreate.ui.adapter.AnswersAdapter.AnswerViewHolder
 import com.example.task1.features.editcreate.ui.adapter.CreateQuizAdapter
 import com.example.task1.features.editcreate.ui.adapter.CreateQuizAdapter.CreateQuizViewHolder
+import com.example.task1.features.editcreate.ui.vm.CreateVM
 import org.koin.android.ext.android.inject
 
 class CreateQuizFragment : Fragment() {

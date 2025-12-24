@@ -1,4 +1,4 @@
-package com.example.task1.features.settings.ui.fragment
+package com.example.task1.features.settings.ui.vm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

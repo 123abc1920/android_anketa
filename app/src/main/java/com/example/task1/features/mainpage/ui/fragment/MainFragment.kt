@@ -23,6 +23,7 @@ import com.example.task1.common.initdatepickers.InitDatePickers
 import com.example.task1.features.mainpage.domain.MainNavigate
 import com.example.task1.features.mainpage.domain.MainRequests
 import com.example.task1.features.mainpage.ui.adapter.QuizAdapter
+import com.example.task1.features.mainpage.ui.vm.MainVM
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 

@@ -90,8 +90,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:backgroundTint="@color/darker_main"
-                                android:foregroundTintMode="multiply"
                                 android:buttonTint="@color/darker_main"
+                                android:foregroundTintMode="multiply"
                                 android:text="Автор скрыт"
                                 android:textColor="@color/text"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -102,8 +102,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:backgroundTint="@color/darker_main"
-                                android:foregroundTintMode="multiply"
                                 android:buttonTint="@color/darker_main"
+                                android:foregroundTintMode="multiply"
                                 android:text="Опрос скрыт"
                                 android:textColor="@color/text"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -120,6 +120,7 @@
                 android:id="@+id/create_quiz_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
                 app:layout_constraintTop_toBottomOf="@+id/quiz_data">
 
             </androidx.recyclerview.widget.RecyclerView>
