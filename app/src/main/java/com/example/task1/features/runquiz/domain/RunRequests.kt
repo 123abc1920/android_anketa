@@ -1,18 +1,12 @@
 package com.example.task1.features.runquiz.domain
 
-import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import com.example.task1.R
 import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.database.models.QuestionInQuiz
 import com.example.task1.data.database.requests.QuizRequest
-import com.example.task1.domain.authorisation.getUserIdHeader
-import com.example.task1.domain.toasts.showToast
-import kotlinx.coroutines.launch
-class Requests {
+import com.example.task1.commondomain.authorisation.getUserIdHeader
+
+class RunRequests {
 
     suspend fun loadQuiz(quizId: String?): Map<String, Any> {
         if (quizId == null || quizId.isEmpty()) {

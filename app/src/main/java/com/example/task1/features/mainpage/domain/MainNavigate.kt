@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.navigation.NavController
 import com.example.task1.R
 
-class Navigate {
+class MainNavigate {
     private fun createQuizIdBundle(link: String): Bundle {
         return Bundle().apply {
             putString("quizId", link)

@@ -12,10 +12,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.task1.R
-import com.example.task1.features.user.domain.Requests
+import com.example.task1.features.user.domain.UserRequests
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import kotlin.getValue
 
 class LoginFragment : Fragment() {
+
+    private val request: UserRequests by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,22 +31,19 @@ class LoginFragment : Fragment() {
         val passwordEditText = view.findViewById<EditText>(R.id.password_in)
         val infoText = view.findViewById<TextView>(R.id.info_text)
 
-        val request = Requests()
-
         view.findViewById<Button>(R.id.login_btn).setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 val result = request.login(
-                    requireContext(),
                     loginEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
 
                 when (result) {
-                    is Requests.Result.Success -> {
+                    is UserRequests.Result.Success -> {
                         findNavController().navigate(R.id.accountFragment)
                     }
 
-                    is Requests.Result.Error -> {
+                    is UserRequests.Result.Error -> {
                         Log.e("Login Error", result.message)
                     }
                 }
@@ -52,17 +53,16 @@ class LoginFragment : Fragment() {
         view.findViewById<Button>(R.id.signup_btn).setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 val result = request.signup(
-                    requireContext(),
                     loginEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
 
                 when (result) {
-                    is Requests.Result.Success -> {
+                    is UserRequests.Result.Success -> {
                         findNavController().navigate(R.id.accountFragment)
                     }
 
-                    is Requests.Result.Error -> {
+                    is UserRequests.Result.Error -> {
                         Log.e("Login Error", result.message)
                     }
                 }

@@ -12,12 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.database.responses.QuestionInWatch
-import com.example.task1.domain.copy.copyToClip
-import com.example.task1.domain.toasts.showToast
-import com.example.task1.features.watch.domain.Requests
+import com.example.task1.commondomain.copy.copyToClip
+import com.example.task1.commondomain.toasts.showToast
+import com.example.task1.features.watch.domain.WatchRequests
 import com.example.task1.features.watch.ui.adapter.UsersAdapter
 import com.example.task1.features.watch.ui.adapter.WatchQuestionAdapter
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class WatchFragment : Fragment() {
     private lateinit var usersRecyclerView: RecyclerView
@@ -27,7 +28,7 @@ class WatchFragment : Fragment() {
 
     private lateinit var link: String
 
-    private val requests = Requests()
+    private val requests: WatchRequests by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

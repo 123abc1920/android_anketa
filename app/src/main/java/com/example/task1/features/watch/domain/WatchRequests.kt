@@ -4,7 +4,7 @@ import android.util.Log
 import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.database.responses.QuestionInWatch
 
-class Requests {
+class WatchRequests {
 
     suspend fun loadQuestions(quizId: String): Map<String, Any> {
         return try {

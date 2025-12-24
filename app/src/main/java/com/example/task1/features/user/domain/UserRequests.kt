@@ -5,14 +5,13 @@ import android.util.Log
 import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.api.models.Quiz
 import com.example.task1.data.database.requests.LoginRequest
-import com.example.task1.domain.authorisation.getUserIdHeader
-import com.example.task1.domain.authorisation.saveUserId
-import com.example.task1.domain.toasts.showToast
+import com.example.task1.commondomain.authorisation.getUserIdHeader
+import com.example.task1.commondomain.authorisation.saveUserId
+import com.example.task1.commondomain.toasts.showToast
 
-class Requests {
+class UserRequests {
 
     suspend fun login(
-        context: Context,
         login: String,
         password: String
     ): Result<String> {
@@ -31,7 +30,6 @@ class Requests {
     }
 
     suspend fun signup(
-        context: Context,
         login: String,
         password: String
     ): Result<String> {

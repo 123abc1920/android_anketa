@@ -5,7 +5,7 @@ import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.api.models.Quiz
 import com.example.task1.data.database.requests.SearchQuizRequest
 
-class Requests {
+class MainRequests {
     suspend fun loadQuizzes(page: Int): List<Quiz> {
         return try {
             val response = RetrofitClient.apiService.getQuizzes(page, 12)

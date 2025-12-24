@@ -10,12 +10,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.task1.R
-import com.example.task1.features.settings.domain.Requests
+import com.example.task1.features.settings.domain.SettingsRequests
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class SettingsFragment : Fragment() {
 
-    private val requests = Requests()
+    private val requests: SettingsRequests by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

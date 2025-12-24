@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.navigation.NavController
 import com.example.task1.R
 
-class Navigation {
+class UserNavigation {
 
     private fun createBundle(quizId: String): Bundle {
         return Bundle().apply {

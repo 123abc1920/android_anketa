@@ -1,4 +1,4 @@
-package com.example.task1.domain.authorisation
+package com.example.task1.commondomain.authorisation
 
 import com.example.task1.data.encryptedprefs.EncryptedPrefsRepository
 

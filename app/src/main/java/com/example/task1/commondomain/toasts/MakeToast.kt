@@ -1,4 +1,4 @@
-package com.example.task1.domain.toasts
+package com.example.task1.commondomain.toasts
 
 import android.content.Context
 import android.widget.Toast

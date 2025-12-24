@@ -8,7 +8,10 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.task1.data.encryptedprefs.EncryptedPrefsRepository
 import com.example.task1.databinding.ActivityMainBinding
-import com.example.task1.domain.authorisation.saveUserId
+import com.example.task1.commondomain.authorisation.saveUserId
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.startKoin
+import org.koin.dsl.module
 
 class MainActivity : AppCompatActivity() {
 

@@ -14,13 +14,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.api.models.Quiz
 import com.example.task1.features.mainpage.ui.adapter.QuizAdapter
-import com.example.task1.features.user.domain.Requests
+import com.example.task1.features.user.domain.UserNavigation
+import com.example.task1.features.user.domain.UserRequests
 import com.example.task1.features.user.ui.adapter.CreatedQuizAdapter
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class AccountFragment : Fragment() {
 
-    private val requests = Requests()
+    private val requests: UserRequests by inject()
+    private val navigation: UserNavigation by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +37,7 @@ class AccountFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             when (val result = requests.loadUserData()) {
-                is Requests.Result.Success -> {
+                is UserRequests.Result.Success -> {
                     if (isAdded) {
                         val data = result.data
                         view.findViewById<TextView>(R.id.username).text =
@@ -44,7 +47,8 @@ class AccountFragment : Fragment() {
                         val createdView = view.findViewById<RecyclerView>(R.id.created_recycle)
                         val createdQuizzes =
                             data["createdQuizzes"] as? List<Quiz> ?: mutableListOf()
-                        val createdAdapter = CreatedQuizAdapter(createdQuizzes.toMutableList())
+                        val createdAdapter =
+                            CreatedQuizAdapter(createdQuizzes.toMutableList(), requests, navigation)
                         createdView.adapter = createdAdapter
                         createdView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -56,7 +60,7 @@ class AccountFragment : Fragment() {
                     }
                 }
 
-                is Requests.Result.Error -> {
+                is UserRequests.Result.Error -> {
                     if (isAdded) {
                         findNavController().navigate(R.id.loginFragment)
                     }

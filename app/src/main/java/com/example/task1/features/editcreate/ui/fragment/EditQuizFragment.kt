@@ -19,11 +19,12 @@ import com.example.task1.data.database.responses.AnswerRequest
 import com.example.task1.data.database.responses.EditQuizRequest
 import com.example.task1.data.database.responses.Question
 import com.example.task1.data.database.responses.QuestionRequest
-import com.example.task1.domain.initdatepickers.InitDatePickers
-import com.example.task1.domain.toasts.showToast
-import com.example.task1.features.editcreate.domain.Requests
+import com.example.task1.commondomain.initdatepickers.InitDatePickers
+import com.example.task1.commondomain.toasts.showToast
+import com.example.task1.features.editcreate.domain.EditRequests
 import com.example.task1.features.editcreate.ui.adapter.EditQuizAdapter
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import kotlin.random.Random
 import kotlin.toString
 
@@ -34,7 +35,7 @@ class EditQuizFragment : Fragment() {
 
     private var questions = mutableListOf<Question>()
 
-    private val requests = Requests()
+    private val requests: EditRequests by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

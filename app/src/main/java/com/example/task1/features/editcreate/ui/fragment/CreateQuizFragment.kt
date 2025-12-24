@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,11 +16,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.database.models.QuestionInQuiz
 import com.example.task1.data.database.responses.CreateQuizResponse
-import com.example.task1.domain.initdatepickers.InitDatePickers
-import com.example.task1.domain.toasts.showToast
-import com.example.task1.features.editcreate.domain.Requests
+import com.example.task1.commondomain.initdatepickers.InitDatePickers
+import com.example.task1.commondomain.toasts.showToast
+import com.example.task1.features.editcreate.domain.EditRequests
 import com.example.task1.features.editcreate.ui.adapter.CreateQuizAdapter
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class CreateQuizFragment : Fragment() {
     private lateinit var createdQuestionView: RecyclerView
@@ -29,7 +29,7 @@ class CreateQuizFragment : Fragment() {
 
     private var questions = mutableListOf<QuestionInQuiz>()
 
-    private val requests = Requests()
+    private val requests: EditRequests by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

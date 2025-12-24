@@ -18,11 +18,12 @@ import com.example.task1.R
 import com.example.task1.data.api.models.Quiz
 import com.example.task1.data.database.requests.Filter
 import com.example.task1.data.database.requests.SearchQuizRequest
-import com.example.task1.domain.initdatepickers.InitDatePickers
-import com.example.task1.features.mainpage.domain.Navigate
-import com.example.task1.features.mainpage.domain.Requests
+import com.example.task1.commondomain.initdatepickers.InitDatePickers
+import com.example.task1.features.mainpage.domain.MainNavigate
+import com.example.task1.features.mainpage.domain.MainRequests
 import com.example.task1.features.mainpage.ui.adapter.QuizAdapter
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class MainFragment : Fragment() {
 
@@ -32,8 +33,8 @@ class MainFragment : Fragment() {
     private var currentPage = 1
     private var isSearch = false
 
-    private val requests = Requests()
-    private val navigate = Navigate()
+    private val requests: MainRequests by inject()
+    private val navigate: MainNavigate by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

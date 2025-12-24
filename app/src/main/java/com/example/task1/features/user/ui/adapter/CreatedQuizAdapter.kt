@@ -14,16 +14,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.api.models.Quiz
 import androidx.navigation.findNavController
-import com.example.task1.domain.dialogs.showConfirmDialog
-import com.example.task1.features.user.domain.Requests
+import com.example.task1.commondomain.dialogs.showConfirmDialog
+import com.example.task1.features.user.domain.UserNavigation
+import com.example.task1.features.user.domain.UserRequests
 import kotlinx.coroutines.launch
 
 class CreatedQuizAdapter(
-    private var quizzes: MutableList<Quiz>?
+    private var quizzes: MutableList<Quiz>?,
+    private val requests: UserRequests,
+    private val navigation: UserNavigation
 ) : RecyclerView.Adapter<CreatedQuizAdapter.QuizViewHolder>() {
-
-    val navigation = com.example.task1.features.user.domain.Navigation()
-    val requests = Requests()
 
     class QuizViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val quizName: TextView = itemView.findViewById(R.id.quiz_name)

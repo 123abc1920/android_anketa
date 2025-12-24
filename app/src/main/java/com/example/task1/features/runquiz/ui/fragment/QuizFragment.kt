@@ -15,17 +15,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.database.models.QuestionInQuiz
 import com.example.task1.data.database.requests.QuizRequest
-import com.example.task1.domain.copy.copyToClip
-import com.example.task1.domain.toasts.showToast
-import com.example.task1.features.runquiz.domain.Requests
+import com.example.task1.commondomain.copy.copyToClip
+import com.example.task1.commondomain.toasts.showToast
+import com.example.task1.features.runquiz.domain.RunRequests
 import com.example.task1.features.runquiz.ui.adapter.QuestionAdapter
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class QuizFragment : Fragment() {
     private lateinit var questionView: RecyclerView
     private lateinit var questionAdapter: QuestionAdapter
     private lateinit var link: String
-    private val requests = Requests()
+    private val requests: RunRequests by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,9 +48,11 @@ class QuizFragment : Fragment() {
                     findNavController().navigate(R.id.mainFragment)
                 } else {
                     view.findViewById<TextView>(R.id.quiz_name).text = result["quizName"].toString()
-                    view.findViewById<TextView>(R.id.start_data).text = result["startDate"].toString()
+                    view.findViewById<TextView>(R.id.start_data).text =
+                        result["startDate"].toString()
                     view.findViewById<TextView>(R.id.end_data).text = result["endDate"].toString()
-                    view.findViewById<TextView>(R.id.author_name).text = result["authorName"].toString()
+                    view.findViewById<TextView>(R.id.author_name).text =
+                        result["authorName"].toString()
 
                     val questions = result["questionsList"] as? List<QuestionInQuiz>
                     if (questions != null) {
@@ -64,10 +67,12 @@ class QuizFragment : Fragment() {
         val sendQuiz = view.findViewById<Button>(R.id.send_quiz)
         sendQuiz.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
-                val success = requests.sendQuiz(QuizRequest(
-                    quiz_id = quizId ?: "",
-                    questions = questionAdapter.getAnswers()
-                ))
+                val success = requests.sendQuiz(
+                    QuizRequest(
+                        quiz_id = quizId ?: "",
+                        questions = questionAdapter.getAnswers()
+                    )
+                )
 
                 if (success) {
                     showToast(requireContext(), "Анкета отправлена!")
