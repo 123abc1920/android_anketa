@@ -1,4 +1,4 @@
-package com.example.task1.commondomain.initdatepickers
+package com.example.task1.common.initdatepickers
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog

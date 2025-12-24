@@ -1,12 +1,10 @@
 package com.example.task1.data.database.responses
 
-import com.example.task1.data.database.models.QuestionInQuiz
-
-data class CreateQuizResponse (
+data class CreateQuizResponse(
     val name: String,
     val is_author_shown: Boolean,
     val is_shown: Boolean,
     val start_date: String,
     val end_date: String,
-    val questions: MutableList<QuestionInQuiz>?
+    val questions: List<Any?>
 )

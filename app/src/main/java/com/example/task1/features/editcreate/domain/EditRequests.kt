@@ -5,7 +5,7 @@ import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.database.responses.CreateQuizResponse
 import com.example.task1.data.database.responses.EditQuizRequest
 import com.example.task1.data.database.responses.Question
-import com.example.task1.commondomain.authorisation.getUserIdHeader
+import com.example.task1.common.authorisation.getUserIdHeader
 
 class EditRequests {
 

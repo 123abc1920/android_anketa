@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.task1.R
 import com.example.task1.features.settings.domain.SettingsRequests
@@ -18,16 +19,16 @@ class SettingsFragment : Fragment() {
 
     private val requests: SettingsRequests by inject()
 
+    private val settingsVM: SettingsVM by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_settings, container, false)
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            val result = requests.loadUserData()
-
-            if (isAdded) {
+        settingsVM.userData.observe(viewLifecycleOwner) { result ->
+            if (result != null && isAdded) {
                 view.findViewById<ConstraintLayout>(R.id.for_logged).visibility =
                     result["result"] as Int
                 view.findViewById<EditText>(R.id.name_text).setText(result["username"].toString())
@@ -59,6 +60,8 @@ class SettingsFragment : Fragment() {
                 }
             }
         }
+
+        settingsVM.loadUserData(requests)
 
         return view
     }

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,13 +17,14 @@ import com.example.task1.features.mainpage.ui.adapter.QuizAdapter
 import com.example.task1.features.user.domain.UserNavigation
 import com.example.task1.features.user.domain.UserRequests
 import com.example.task1.features.user.ui.adapter.CreatedQuizAdapter
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class AccountFragment : Fragment() {
 
     private val requests: UserRequests by inject()
     private val navigation: UserNavigation by inject()
+
+    private val accountVM: AccountVM by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,38 +36,33 @@ class AccountFragment : Fragment() {
             findNavController().navigate(R.id.createFragment)
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            when (val result = requests.loadUserData()) {
-                is UserRequests.Result.Success -> {
-                    if (isAdded) {
-                        val data = result.data
-                        view.findViewById<TextView>(R.id.username).text =
-                            data["username"].toString()
-                        view.findViewById<TextView>(R.id.login).text = data["login"].toString()
+        accountVM.userData.observe(viewLifecycleOwner) { result ->
+            if (result != null && isAdded) {
+                view.findViewById<TextView>(R.id.username).text = result["username"].toString()
+                view.findViewById<TextView>(R.id.login).text = result["login"].toString()
 
-                        val createdView = view.findViewById<RecyclerView>(R.id.created_recycle)
-                        val createdQuizzes =
-                            data["createdQuizzes"] as? List<Quiz> ?: mutableListOf()
-                        val createdAdapter =
-                            CreatedQuizAdapter(createdQuizzes.toMutableList(), requests, navigation)
-                        createdView.adapter = createdAdapter
-                        createdView.layoutManager = LinearLayoutManager(requireContext())
+                val createdView = view.findViewById<RecyclerView>(R.id.created_recycle)
+                val createdQuizzes = result["createdQuizzes"] as? List<Quiz> ?: mutableListOf()
+                val createdAdapter =
+                    CreatedQuizAdapter(createdQuizzes.toMutableList(), requests, navigation)
+                createdView.adapter = createdAdapter
+                createdView.layoutManager = LinearLayoutManager(requireContext())
 
-                        val doneView = view.findViewById<RecyclerView>(R.id.done_recycle)
-                        val doneQuizzes = data["doneQuizzes"] as? List<Quiz> ?: mutableListOf()
-                        val doneAdapter = QuizAdapter(doneQuizzes.toMutableList())
-                        doneView.adapter = doneAdapter
-                        doneView.layoutManager = LinearLayoutManager(requireContext())
-                    }
-                }
-
-                is UserRequests.Result.Error -> {
-                    if (isAdded) {
-                        findNavController().navigate(R.id.loginFragment)
-                    }
-                }
+                val doneView = view.findViewById<RecyclerView>(R.id.done_recycle)
+                val doneQuizzes = result["doneQuizzes"] as? List<Quiz> ?: mutableListOf()
+                val doneAdapter = QuizAdapter(doneQuizzes.toMutableList())
+                doneView.adapter = doneAdapter
+                doneView.layoutManager = LinearLayoutManager(requireContext())
             }
         }
+
+        accountVM.error.observe(viewLifecycleOwner) { hasError ->
+            if (hasError && isAdded) {
+                findNavController().navigate(R.id.loginFragment)
+            }
+        }
+
+        accountVM.loadUserData(requests)
 
         return view
     }

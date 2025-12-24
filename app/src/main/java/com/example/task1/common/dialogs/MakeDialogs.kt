@@ -1,4 +1,4 @@
-package com.example.task1.commondomain.dialogs
+package com.example.task1.common.dialogs
 
 import android.app.AlertDialog
 import android.content.Context

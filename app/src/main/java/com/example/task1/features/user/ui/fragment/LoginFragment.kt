@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -29,7 +28,6 @@ class LoginFragment : Fragment() {
 
         val loginEditText = view.findViewById<EditText>(R.id.login_in)
         val passwordEditText = view.findViewById<EditText>(R.id.password_in)
-        val infoText = view.findViewById<TextView>(R.id.info_text)
 
         view.findViewById<Button>(R.id.login_btn).setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {

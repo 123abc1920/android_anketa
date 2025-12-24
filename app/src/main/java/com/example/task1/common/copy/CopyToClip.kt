@@ -1,4 +1,4 @@
-package com.example.task1.commondomain.copy
+package com.example.task1.common.copy
 
 import android.content.ClipData
 import android.content.ClipboardManager

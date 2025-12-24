@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +19,7 @@ import com.example.task1.R
 import com.example.task1.data.api.models.Quiz
 import com.example.task1.data.database.requests.Filter
 import com.example.task1.data.database.requests.SearchQuizRequest
-import com.example.task1.commondomain.initdatepickers.InitDatePickers
+import com.example.task1.common.initdatepickers.InitDatePickers
 import com.example.task1.features.mainpage.domain.MainNavigate
 import com.example.task1.features.mainpage.domain.MainRequests
 import com.example.task1.features.mainpage.ui.adapter.QuizAdapter
@@ -36,29 +37,36 @@ class MainFragment : Fragment() {
     private val requests: MainRequests by inject()
     private val navigate: MainNavigate by inject()
 
+    private val mainVM: MainVM by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_main, container, false)
 
-        fun load() {
-            viewLifecycleOwner.lifecycleScope.launch {
-                val quizzes = if (isSearch) {
-                    requests.search(createSearchQuizRequest(view))
-                } else {
-                    requests.loadQuizzes(currentPage)
-                }
-                quizAdapter.updateQuizzes(quizzes as MutableList<Quiz>)
+        mainVM.quizzesData.observe(viewLifecycleOwner) { quizzes ->
+            if (isAdded) {
+                quizAdapter.updateQuizzes(quizzes.toMutableList())
             }
         }
 
-        load()
+        if (!isSearch) {
+            mainVM.loadQuizzes(requests, currentPage)
+        }
 
         recyclerView = view.findViewById(R.id.quiz_view)
         quizAdapter = QuizAdapter(mutableListOf())
         recyclerView.adapter = quizAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        fun load() {
+            if (isSearch) {
+                mainVM.searchQuizzes(requests, createSearchQuizRequest(view))
+            } else {
+                mainVM.loadQuizzes(requests, currentPage)
+            }
+        }
 
         val prevBtn = view.findViewById<ImageButton>(R.id.prev)
         prevBtn.setOnClickListener {
@@ -93,7 +101,7 @@ class MainFragment : Fragment() {
         view.findViewById<ImageButton>(R.id.find_btn).setOnClickListener {
             currentPage = 1
             isSearch = true
-            load()
+            mainVM.loadQuizzes(requests, currentPage)
         }
 
         var startDate = view.findViewById<EditText>(R.id.start_date)

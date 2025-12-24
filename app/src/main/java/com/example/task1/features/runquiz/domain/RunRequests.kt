@@ -4,7 +4,7 @@ import android.util.Log
 import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.database.models.QuestionInQuiz
 import com.example.task1.data.database.requests.QuizRequest
-import com.example.task1.commondomain.authorisation.getUserIdHeader
+import com.example.task1.common.authorisation.getUserIdHeader
 
 class RunRequests {
 

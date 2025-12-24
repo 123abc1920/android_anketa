@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.Log
 import android.view.View
 import com.example.task1.data.api.RetrofitClient
-import com.example.task1.commondomain.authorisation.getUserIdHeader
-import com.example.task1.commondomain.toasts.showToast
+import com.example.task1.common.authorisation.getUserIdHeader
+import com.example.task1.common.toasts.showToast
 
 class SettingsRequests {
 

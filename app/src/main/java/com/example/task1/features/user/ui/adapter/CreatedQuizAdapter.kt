@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.api.models.Quiz
 import androidx.navigation.findNavController
-import com.example.task1.commondomain.dialogs.showConfirmDialog
+import com.example.task1.common.dialogs.showConfirmDialog
 import com.example.task1.features.user.domain.UserNavigation
 import com.example.task1.features.user.domain.UserRequests
 import kotlinx.coroutines.launch

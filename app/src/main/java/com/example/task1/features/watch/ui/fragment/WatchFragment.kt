@@ -7,17 +7,16 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.database.responses.QuestionInWatch
-import com.example.task1.commondomain.copy.copyToClip
-import com.example.task1.commondomain.toasts.showToast
+import com.example.task1.common.copy.copyToClip
+import com.example.task1.common.toasts.showToast
 import com.example.task1.features.watch.domain.WatchRequests
 import com.example.task1.features.watch.ui.adapter.UsersAdapter
 import com.example.task1.features.watch.ui.adapter.WatchQuestionAdapter
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class WatchFragment : Fragment() {
@@ -29,6 +28,7 @@ class WatchFragment : Fragment() {
     private lateinit var link: String
 
     private val requests: WatchRequests by inject()
+    private val viewModel: WatchVM by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,30 +48,28 @@ class WatchFragment : Fragment() {
         usersRecyclerView.adapter = usersAdapter
         usersRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            if (quizId != null) {
-                val result = requests.loadQuestions(quizId)
+        viewModel.quizData.observe(viewLifecycleOwner) { result ->
+            if (result != null && isAdded) {
+                view.findViewById<TextView>(R.id.quiz_name).text = result["quizName"].toString()
+                view.findViewById<TextView>(R.id.start_data).text = result["startDate"].toString()
+                view.findViewById<TextView>(R.id.end_data).text = result["endDate"].toString()
+                view.findViewById<TextView>(R.id.author_name).text = result["authorName"].toString()
+                link = result["link"].toString()
 
-                if (isAdded) {
-                    view.findViewById<TextView>(R.id.quiz_name).text = result["quizName"].toString()
-                    view.findViewById<TextView>(R.id.start_data).text =
-                        result["startDate"].toString()
-                    view.findViewById<TextView>(R.id.end_data).text = result["endDate"].toString()
-                    view.findViewById<TextView>(R.id.author_name).text =
-                        result["authorName"].toString()
-                    link = result["link"].toString()
+                val questionsList = result["questionsList"] as? List<QuestionInWatch>
+                if (questionsList != null) {
+                    questionsAdapter.updateQuestions(questionsList.toMutableList())
+                }
 
-                    val questionsList = result["questionsList"] as? List<QuestionInWatch>
-                    if (questionsList != null) {
-                        questionsAdapter.updateQuestions(questionsList.toMutableList())
-                    }
-
-                    val usersList = result["usersList"] as? List<String>
-                    if (usersList != null) {
-                        usersAdapter.updateUsers(usersList.toMutableList())
-                    }
+                val usersList = result["usersList"] as? List<String>
+                if (usersList != null) {
+                    usersAdapter.updateUsers(usersList.toMutableList())
                 }
             }
+        }
+
+        if (quizId != null) {
+            viewModel.loadData(requests, quizId)
         }
 
         view.findViewById<ImageButton>(R.id.copy_link).setOnClickListener {

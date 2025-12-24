@@ -1,5 +1,7 @@
 package com.example.task1.features.editcreate.ui.adapter
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +10,7 @@ import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.api.models.Answer
+import com.example.task1.data.database.models.AnswerInQuiz
 import kotlin.collections.remove
 
 class AnswersAdapter(
@@ -29,6 +32,13 @@ class AnswersAdapter(
         val answer = answers?.get(position)
 
         holder.answerText.setText(answer?.text.toString())
+        holder.answerText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                answers?.get(holder.bindingAdapterPosition)?.text = s.toString()
+            }
+        })
 
         holder.button.setOnClickListener {
             deleteAnswer(position)
@@ -42,14 +52,12 @@ class AnswersAdapter(
         notifyDataSetChanged()
     }
 
-    fun addAnswer(answer: Answer) {
-        answers?.add(answer)
-        notifyDataSetChanged()
-    }
-
     fun deleteAnswer(position: Int) {
         answers?.removeAt(position)
         notifyItemRemoved(position)
     }
 
+    fun getAnswers(): List<Answer>? {
+        return answers?.toList()
+    }
 }

@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
 import com.example.task1.data.database.models.QuestionInQuiz
 import com.example.task1.data.database.requests.QuizRequest
-import com.example.task1.commondomain.copy.copyToClip
-import com.example.task1.commondomain.toasts.showToast
+import com.example.task1.common.copy.copyToClip
+import com.example.task1.common.toasts.showToast
 import com.example.task1.features.runquiz.domain.RunRequests
 import com.example.task1.features.runquiz.ui.adapter.QuestionAdapter
 import kotlinx.coroutines.launch
@@ -26,7 +27,10 @@ class QuizFragment : Fragment() {
     private lateinit var questionView: RecyclerView
     private lateinit var questionAdapter: QuestionAdapter
     private lateinit var link: String
+
     private val requests: RunRequests by inject()
+
+    private val quizVM: QuizVM by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,10 +44,8 @@ class QuizFragment : Fragment() {
         questionView.adapter = questionAdapter
         questionView.layoutManager = LinearLayoutManager(requireContext())
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            val result = requests.loadQuiz(quizId)
-
-            if (isAdded) {
+        quizVM.quizData.observe(viewLifecycleOwner) { result ->
+            if (result != null && isAdded) {
                 if (result["shouldNavigate"] == true) {
                     findNavController().navigate(R.id.mainFragment)
                 } else {
@@ -80,6 +82,8 @@ class QuizFragment : Fragment() {
                 }
             }
         }
+
+        quizVM.loadQuiz(requests, quizId.toString())
 
         view.findViewById<ImageButton>(R.id.copy_link).setOnClickListener {
             copyToClip(requireContext(), link)

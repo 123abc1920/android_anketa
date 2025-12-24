@@ -10,6 +10,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,8 +20,8 @@ import com.example.task1.data.database.responses.AnswerRequest
 import com.example.task1.data.database.responses.EditQuizRequest
 import com.example.task1.data.database.responses.Question
 import com.example.task1.data.database.responses.QuestionRequest
-import com.example.task1.commondomain.initdatepickers.InitDatePickers
-import com.example.task1.commondomain.toasts.showToast
+import com.example.task1.common.initdatepickers.InitDatePickers
+import com.example.task1.common.toasts.showToast
 import com.example.task1.features.editcreate.domain.EditRequests
 import com.example.task1.features.editcreate.ui.adapter.EditQuizAdapter
 import kotlinx.coroutines.launch
@@ -36,6 +37,7 @@ class EditQuizFragment : Fragment() {
     private var questions = mutableListOf<Question>()
 
     private val requests: EditRequests by inject()
+    private val viewModel: EditVM by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,10 +57,8 @@ class EditQuizFragment : Fragment() {
         createdQuestionView.adapter = createdQuestionAdapter
         createdQuestionView.layoutManager = LinearLayoutManager(requireContext())
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            val quizData = requests.loadQuizData(quizId)
-
-            if (isAdded) {
+        viewModel.quizData.observe(viewLifecycleOwner) { quizData ->
+            if (quizData != null && isAdded) {
                 view.findViewById<TextView>(R.id.quiz_name).text =
                     quizData.get("quizName").toString()
                 view.findViewById<EditText>(R.id.start_date)
@@ -71,6 +71,20 @@ class EditQuizFragment : Fragment() {
                 }
             }
         }
+
+        viewModel.saveResult.observe(viewLifecycleOwner) { success ->
+            if (success != null && isAdded) {
+                if (success) {
+                    showToast(requireContext(), "Анкета обновлена!")
+                    findNavController().navigate(R.id.accountFragment)
+                } else {
+                    showToast(requireContext(), "Ошибка обновления анкеты")
+                }
+                viewModel.clearSaveResult()
+            }
+        }
+
+        viewModel.loadQuizData(requests, quizId)
 
         view.findViewById<Button>(R.id.add_question_btn).setOnClickListener {
             createdQuestionAdapter.addQuestion()
@@ -86,15 +100,7 @@ class EditQuizFragment : Fragment() {
             val quizIdArg = arguments?.getString("quizId") ?: ""
             val editQuiz = createEditQuiz(quizIdArg, view)
 
-            viewLifecycleOwner.lifecycleScope.launch {
-                val success = requests.sendCreatedQuiz(editQuiz)
-                if (success) {
-                    showToast(requireContext(), "Анкета обновлена!")
-                    findNavController().navigate(R.id.accountFragment)
-                } else {
-                    showToast(requireContext(), "Ошибка обновления анкеты")
-                }
-            }
+            viewModel.saveQuiz(requests, editQuiz)
         }
 
         return view

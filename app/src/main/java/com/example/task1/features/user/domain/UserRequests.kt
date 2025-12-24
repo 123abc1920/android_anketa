@@ -5,9 +5,9 @@ import android.util.Log
 import com.example.task1.data.api.RetrofitClient
 import com.example.task1.data.api.models.Quiz
 import com.example.task1.data.database.requests.LoginRequest
-import com.example.task1.commondomain.authorisation.getUserIdHeader
-import com.example.task1.commondomain.authorisation.saveUserId
-import com.example.task1.commondomain.toasts.showToast
+import com.example.task1.common.authorisation.getUserIdHeader
+import com.example.task1.common.authorisation.saveUserId
+import com.example.task1.common.toasts.showToast
 
 class UserRequests {
 
