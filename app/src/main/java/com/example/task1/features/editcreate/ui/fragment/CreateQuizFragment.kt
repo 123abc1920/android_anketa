@@ -75,57 +75,58 @@ class CreateQuizFragment : Fragment() {
         }
 
         view.findViewById<Button>(R.id.send_created_quiz).setOnClickListener {
-            val questionsWithAnswers = mutableListOf<QuestionInCreateQuiz>()
-
-            for (i in 0 until createdQuestionView.childCount) {
-                val child = createdQuestionView.getChildAt(i)
-                val viewHolder =
-                    createdQuestionView.getChildViewHolder(child) as? CreateQuizViewHolder
-
-                viewHolder?.let { vh ->
-                    val questionText = vh.questionText.text.toString()
-                    val isRequired = vh.isRequired.isChecked
-
-                    // Собираем ответы из answersView
-                    val answers = mutableListOf<AnswerInQuiz>()
-                    for (j in 0 until vh.answersView.childCount) {
-                        val answerChild = vh.answersView.getChildAt(j)
-                        val answerHolder =
-                            vh.answersView.getChildViewHolder(answerChild) as? AnswerViewHolder
-
-                        answerHolder?.let { ah ->
-                            val answerText = ah.answerText.text.toString()
-                            if (answerText.isNotEmpty()) {
-                                answers.add(AnswerInQuiz(answerText, ""))
-                            }
-                        }
-                    }
-
-                    questionsWithAnswers.add(
-                        QuestionInCreateQuiz(
-                            text = questionText,
-                            id = "",
-                            is_required = isRequired,
-                            answers = answers,
-                            selectedAnswerId = null,
-                            selectedAnswerText = null
-                        )
-                    )
-                }
-            }
-
-            val createdQuiz = CreateQuizResponse(
-                view.findViewById<EditText>(R.id.quiz_name).text.toString(),
-                view.findViewById<CheckBox>(R.id.author_shown).isChecked,
-                view.findViewById<CheckBox>(R.id.quiz_shown).isChecked,
-                view.findViewById<EditText>(R.id.start_date).text.toString(),
-                view.findViewById<EditText>(R.id.end_date).text.toString(),
-                questionsWithAnswers
-            )
-
-            createVM.createQuiz(requests, createdQuiz)
+            createVM.createQuiz(requests, createNewQuizData(view))
         }
 
         return view
+    }
+
+    private fun createNewQuizData(view: View): CreateQuizResponse {
+        val questionsWithAnswers = mutableListOf<QuestionInCreateQuiz>()
+
+        for (i in 0 until createdQuestionView.childCount) {
+            val child = createdQuestionView.getChildAt(i)
+            val viewHolder =
+                createdQuestionView.getChildViewHolder(child) as? CreateQuizViewHolder
+
+            viewHolder?.let { vh ->
+                val questionText = vh.questionText.text.toString()
+                val isRequired = vh.isRequired.isChecked
+
+                val answers = mutableListOf<AnswerInQuiz>()
+                for (j in 0 until vh.answersView.childCount) {
+                    val answerChild = vh.answersView.getChildAt(j)
+                    val answerHolder =
+                        vh.answersView.getChildViewHolder(answerChild) as? AnswerViewHolder
+
+                    answerHolder?.let { ah ->
+                        val answerText = ah.answerText.text.toString()
+                        if (answerText.isNotEmpty()) {
+                            answers.add(AnswerInQuiz(answerText, ""))
+                        }
+                    }
+                }
+
+                questionsWithAnswers.add(
+                    QuestionInCreateQuiz(
+                        text = questionText,
+                        id = "",
+                        is_required = isRequired,
+                        answers = answers,
+                        selectedAnswerId = null,
+                        selectedAnswerText = null
+                    )
+                )
+            }
+        }
+
+        return CreateQuizResponse(
+            view.findViewById<EditText>(R.id.quiz_name).text.toString(),
+            view.findViewById<CheckBox>(R.id.author_shown).isChecked,
+            view.findViewById<CheckBox>(R.id.quiz_shown).isChecked,
+            view.findViewById<EditText>(R.id.start_date).text.toString(),
+            view.findViewById<EditText>(R.id.end_date).text.toString(),
+            questionsWithAnswers
+        )
     }
 }

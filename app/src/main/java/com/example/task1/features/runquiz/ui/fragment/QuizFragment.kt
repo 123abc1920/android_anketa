@@ -1,6 +1,7 @@
 package com.example.task1.features.runquiz.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,6 +50,7 @@ class QuizFragment : Fragment() {
             if (result != null && isAdded) {
                 if (result["shouldNavigate"] == true) {
                     findNavController().navigate(R.id.mainFragment)
+                    showToast(requireContext(), "Анкета завершена!")
                 } else {
                     view.findViewById<TextView>(R.id.quiz_name).text = result["quizName"].toString()
                     view.findViewById<TextView>(R.id.start_data).text =
@@ -70,6 +72,7 @@ class QuizFragment : Fragment() {
         val sendQuiz = view.findViewById<Button>(R.id.send_quiz)
         sendQuiz.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
+                Log.i("kkk", questionAdapter.getAnswers().toString())
                 val success = requests.sendQuiz(
                     QuizRequest(
                         quiz_id = quizId ?: "",

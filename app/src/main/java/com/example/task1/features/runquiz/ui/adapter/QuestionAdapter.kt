@@ -1,5 +1,7 @@
 package com.example.task1.features.runquiz.ui.adapter
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +23,7 @@ class QuestionAdapter(
         val questionName: TextView = itemView.findViewById(R.id.question_name)
         val questionAnswer: EditText = itemView.findViewById(R.id.answer_text)
         val answersRadioGroup: RadioGroup = itemView.findViewById(R.id.answers_view)
+        var answertext: String = ""
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestionViewHolder {
@@ -53,12 +56,20 @@ class QuestionAdapter(
             holder.answersRadioGroup.visibility = View.GONE
             holder.questionAnswer.visibility = View.VISIBLE
 
-            holder.questionAnswer.setOnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
-                    val answerText = holder.questionAnswer.text.toString()
-                    question?.selectedAnswerText = answerText
+            holder.questionAnswer.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
                 }
-            }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: Editable?) {
+                    question?.selectedAnswerText = s.toString()
+                }
+            })
         }
     }
 

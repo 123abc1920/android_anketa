@@ -105,7 +105,7 @@ class MainFragment : Fragment() {
         view.findViewById<ImageButton>(R.id.find_btn).setOnClickListener {
             currentPage = 1
             isSearch = true
-            mainVM.loadQuizzes(requests, currentPage)
+            mainVM.searchQuizzes(requests, createSearchQuizRequest(view))
         }
 
         var startDate = view.findViewById<EditText>(R.id.start_date)
