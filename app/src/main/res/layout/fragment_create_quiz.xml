@@ -89,10 +89,8 @@
                                 android:id="@+id/author_shown"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:backgroundTint="@color/darker_main"
-                                android:buttonTint="@color/darker_main"
-                                android:foregroundTintMode="multiply"
                                 android:text="Автор скрыт"
+                                android:buttonTint="@color/darker_main"
                                 android:textColor="@color/text"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/end_date" />
@@ -101,10 +99,8 @@
                                 android:id="@+id/quiz_shown"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:backgroundTint="@color/darker_main"
-                                android:buttonTint="@color/darker_main"
-                                android:foregroundTintMode="multiply"
                                 android:text="Опрос скрыт"
+                                android:buttonTint="@color/darker_main"
                                 android:textColor="@color/text"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/author_shown" />

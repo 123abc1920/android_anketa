@@ -4,11 +4,39 @@
     </style>
 
     <style name="Theme.Task1" parent="Base.Theme.Task1">
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/darker_main</item>
+        <item name="colorPrimaryVariant">@color/darker_main</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@color/main</item>
+        <item name="colorSecondaryVariant">@color/main</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/white</item>
+        <item name="colorOnBackground">@color/white</item>
+
+        <!-- Surface colors -->
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
+
+        <!-- Dialog colors -->
+        <item name="alertDialogTheme">@style/CustomDialog</item>
     </style>
 
     <style name="RobotoBoldTextAppearance">
         <item name="android:fontFamily">@font/pacifico_regular</item>
         <item name="android:textColor">@color/text</item>
         <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="CustomDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/darker_main</item>
+        <item name="colorPrimary">@color/darker_main</item>
+        <item name="colorOnPrimary">@color/darker_main</item>
+        <item name="android:textColorPrimary">@color/text</item>
+        <item name="android:textColorSecondary">@color/semitext</item>
     </style>
 </resources>

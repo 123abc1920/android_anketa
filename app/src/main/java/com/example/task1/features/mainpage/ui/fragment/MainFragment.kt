@@ -8,15 +8,14 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ScrollView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.task1.R
-import com.example.task1.data.api.models.Quiz
 import com.example.task1.data.database.requests.Filter
 import com.example.task1.data.database.requests.SearchQuizRequest
 import com.example.task1.common.initdatepickers.InitDatePickers
@@ -24,7 +23,6 @@ import com.example.task1.features.mainpage.domain.MainNavigate
 import com.example.task1.features.mainpage.domain.MainRequests
 import com.example.task1.features.mainpage.ui.adapter.QuizAdapter
 import com.example.task1.features.mainpage.ui.vm.MainVM
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class MainFragment : Fragment() {
@@ -61,22 +59,27 @@ class MainFragment : Fragment() {
         recyclerView.adapter = quizAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        val mainScroll = view.findViewById<ScrollView>(R.id.main_scroll)
         fun load() {
             if (isSearch) {
                 mainVM.searchQuizzes(requests, createSearchQuizRequest(view))
             } else {
                 mainVM.loadQuizzes(requests, currentPage)
             }
+            mainScroll.smoothScrollTo(0, 0)
         }
 
         val prevBtn = view.findViewById<ImageButton>(R.id.prev)
         prevBtn.setOnClickListener {
-            currentPage += 1
+            currentPage -= 1
+            if (currentPage <= 0) {
+                currentPage = 1
+            }
             load()
         }
         val nextBtn = view.findViewById<ImageButton>(R.id.next)
         nextBtn.setOnClickListener {
-            currentPage -= 1
+            currentPage += 1
             load()
         }
 
