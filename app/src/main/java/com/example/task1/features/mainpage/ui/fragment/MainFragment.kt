@@ -8,8 +8,8 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.ScrollView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -59,7 +59,7 @@ class MainFragment : Fragment() {
         recyclerView.adapter = quizAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val mainScroll = view.findViewById<ScrollView>(R.id.main_scroll)
+        val mainScroll = view.findViewById<NestedScrollView>(R.id.main_scroll)
         fun load() {
             if (isSearch) {
                 mainVM.searchQuizzes(requests, createSearchQuizRequest(view))

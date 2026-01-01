@@ -4,25 +4,25 @@
     <item
         android:id="@+id/account"
         android:icon="@drawable/person"
-        android:iconTint="@color/white"
+        android:iconTint="@color/darker_main"
         android:title="Account"
         app:showAsAction="always"></item>
     <item
         android:id="@+id/main"
         android:icon="@drawable/house_solid_full"
-        android:iconTint="@color/white"
+        android:iconTint="@color/darker_main"
         android:title="Main"
         app:showAsAction="always"></item>
     <item
         android:id="@+id/settings"
         android:icon="@drawable/gear_solid_full"
-        android:iconTint="@color/white"
+        android:iconTint="@color/darker_main"
         android:title="Settings"
         app:showAsAction="always"></item>
     <item
         android:id="@+id/logout"
         android:icon="@drawable/arrow_right_from_bracket_solid_full"
-        android:iconTint="@color/white"
+        android:iconTint="@color/darker_main"
         android:title="Log out"
         app:showAsAction="always"></item>
 </menu>
