@@ -32,6 +32,7 @@ class MainFragment : Fragment() {
 
     private var currentPage = 1
     private var isSearch = false
+    private var maxPage = 1
 
     private val requests: MainRequests by inject()
     private val navigate: MainNavigate by inject()
@@ -47,6 +48,12 @@ class MainFragment : Fragment() {
         mainVM.quizzesData.observe(viewLifecycleOwner) { quizzes ->
             if (isAdded) {
                 quizAdapter.updateQuizzes(quizzes.toMutableList())
+            }
+        }
+
+        mainVM.max.observe(viewLifecycleOwner) { max ->
+            if (isAdded) {
+                maxPage = max
             }
         }
 
@@ -80,6 +87,9 @@ class MainFragment : Fragment() {
         val nextBtn = view.findViewById<ImageButton>(R.id.next)
         nextBtn.setOnClickListener {
             currentPage += 1
+            if (currentPage > maxPage) {
+                currentPage = maxPage
+            }
             load()
         }
 

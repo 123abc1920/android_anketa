@@ -12,16 +12,22 @@ import kotlinx.coroutines.launch
 class MainVM : ViewModel() {
     private val _quizzesData = MutableLiveData<List<Quiz>>()
     val quizzesData: LiveData<List<Quiz>> = _quizzesData
+    private val _max = MutableLiveData<Int>(1)
+    val max: LiveData<Int> = _max
 
     fun loadQuizzes(requests: MainRequests, page: Int) {
         viewModelScope.launch {
-            _quizzesData.value = requests.loadQuizzes(page)
+            val data = requests.loadQuizzes(page)
+            _quizzesData.value = data.get("quizzes") as List<Quiz>?
+            _max.value = data.get("max") as Int?
         }
     }
 
     fun searchQuizzes(requests: MainRequests, searchRequest: SearchQuizRequest) {
         viewModelScope.launch {
-            _quizzesData.value = requests.search(searchRequest)
+            val data = requests.search(searchRequest)
+            _quizzesData.value = data.get("quizzes") as List<Quiz>?
+            _max.value = data.get("max") as Int?
         }
     }
 }
