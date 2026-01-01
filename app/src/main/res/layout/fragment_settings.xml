@@ -19,7 +19,6 @@
                 android:id="@+id/for_logged"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -152,10 +151,11 @@
                                     android:id="@+id/password_header"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:paddingBottom="10dp"
                                     android:text="Сменить пароль"
                                     android:textColor="@color/semitext"
+                                    android:textSize="@dimen/textSizeHeader"
                                     android:textStyle="bold"
-                                    app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
 

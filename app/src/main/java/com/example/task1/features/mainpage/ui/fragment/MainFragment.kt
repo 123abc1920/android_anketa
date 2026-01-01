@@ -1,9 +1,13 @@
 package com.example.task1.features.mainpage.ui.fragment
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -19,6 +23,7 @@ import com.example.task1.R
 import com.example.task1.data.database.requests.Filter
 import com.example.task1.data.database.requests.SearchQuizRequest
 import com.example.task1.common.initdatepickers.InitDatePickers
+import com.example.task1.common.toasts.showToast
 import com.example.task1.features.mainpage.domain.MainNavigate
 import com.example.task1.features.mainpage.domain.MainRequests
 import com.example.task1.features.mainpage.ui.adapter.QuizAdapter
@@ -45,6 +50,8 @@ class MainFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_main, container, false)
 
+        val mainScroll = view.findViewById<NestedScrollView>(R.id.main_scroll)
+
         mainVM.quizzesData.observe(viewLifecycleOwner) { quizzes ->
             if (isAdded) {
                 quizAdapter.updateQuizzes(quizzes.toMutableList())
@@ -66,7 +73,6 @@ class MainFragment : Fragment() {
         recyclerView.adapter = quizAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val mainScroll = view.findViewById<NestedScrollView>(R.id.main_scroll)
         fun load() {
             if (isSearch) {
                 mainVM.searchQuizzes(requests, createSearchQuizRequest(view))
@@ -116,6 +122,7 @@ class MainFragment : Fragment() {
             currentPage = 1
             isSearch = true
             mainVM.searchQuizzes(requests, createSearchQuizRequest(view))
+            showToast(requireContext(), "Результаты получены")
         }
 
         var startDate = view.findViewById<EditText>(R.id.start_date)
