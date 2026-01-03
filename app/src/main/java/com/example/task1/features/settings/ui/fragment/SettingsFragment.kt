@@ -9,8 +9,11 @@ import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.task1.R
+import com.example.task1.common.dialogs.showConfirmDialog
 import com.example.task1.features.settings.domain.SettingsRequests
 import com.example.task1.features.settings.ui.vm.SettingsVM
 import kotlinx.coroutines.launch
@@ -32,6 +35,8 @@ class SettingsFragment : Fragment() {
             if (result != null && isAdded) {
                 view.findViewById<ConstraintLayout>(R.id.for_logged).visibility =
                     result["result"] as Int
+                view.findViewById<ConstraintLayout>(R.id.setting_hint).visibility =
+                    result["hint_result"] as Int
                 view.findViewById<EditText>(R.id.name_text).setText(result["username"].toString())
                 view.findViewById<EditText>(R.id.login_text).setText(result["login"].toString())
             }
@@ -60,6 +65,20 @@ class SettingsFragment : Fragment() {
                     view.findViewById<EditText>(R.id.password_new).setText("")
                 }
             }
+        }
+
+        view.findViewById<Button>(R.id.delete_account_btn).setOnClickListener {
+            showConfirmDialog(
+                requireContext(),
+                "Удалить аккаунт?",
+                "Это действие нельзя будет отменить",
+                { result ->
+                    if (result) {
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            requests.deleteAccount(requireContext(), findNavController())
+                        }
+                    }
+                })
         }
 
         settingsVM.loadUserData(requests)

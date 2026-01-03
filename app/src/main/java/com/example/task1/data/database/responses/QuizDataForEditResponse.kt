@@ -5,7 +5,7 @@ import com.example.task1.data.api.models.Answer
 data class Question(
     var question_text: String,
     val id: String,
-    val required: String,
+    var required: String,
     val answers: MutableList<Answer>
 )
 

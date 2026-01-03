@@ -36,4 +36,9 @@ class UsersAdapter(
         users?.addAll(newList)
         notifyDataSetChanged()
     }
+
+    fun deleteUser(position: Int) {
+        users?.removeAt(position)
+        notifyItemRemoved(position)
+    }
 }

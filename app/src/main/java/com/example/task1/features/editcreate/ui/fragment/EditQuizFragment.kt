@@ -65,6 +65,10 @@ class EditQuizFragment : Fragment() {
                 view.findViewById<EditText>(R.id.end_date)
                     .setText(quizData.get("endData").toString())
                 val questionList = quizData.get("questionList") as? List<Question>
+                view.findViewById<CheckBox>(R.id.author_shown).isChecked =
+                    quizData.get("isAuthorShown") as Boolean
+                view.findViewById<CheckBox>(R.id.quiz_shown).isChecked =
+                    quizData.get("isShown") as Boolean
                 if (questionList != null) {
                     createdQuestionAdapter.updateQuestions(questionList.toMutableList())
                 }
@@ -119,7 +123,7 @@ class EditQuizFragment : Fragment() {
                 QuestionRequest(
                     if (question.id.isNotEmpty()) question.id else "new-${Random.nextInt(100000)}",
                     question.question_text,
-                    true,
+                    if (question.required.contains("*")) true else false,
                     question.answers.map { answer ->
                         AnswerRequest(
                             (if (answer.id != null) answer.id else "new-${Random.nextInt(100000)}").toString(),

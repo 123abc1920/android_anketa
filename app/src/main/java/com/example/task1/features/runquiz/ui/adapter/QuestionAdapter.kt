@@ -14,6 +14,7 @@ import com.example.task1.R
 import com.example.task1.data.database.models.AnswerInQuiz
 import com.example.task1.data.database.models.QuestionAnswer
 import com.example.task1.data.database.models.QuestionInQuiz
+import android.util.Log
 
 class QuestionAdapter(
     private var questions: MutableList<QuestionInQuiz>?
@@ -35,7 +36,8 @@ class QuestionAdapter(
     override fun onBindViewHolder(holder: QuestionViewHolder, position: Int) {
         val question = questions?.get(position)
 
-        val required = if (question?.required == true) "*" else ""
+        Log.d("Question", question?.required.toString())
+        val required = question?.required
         holder.questionName.text = question?.question_text + " " + required
 
         holder.answersRadioGroup.removeAllViews()
@@ -75,14 +77,23 @@ class QuestionAdapter(
 
     override fun getItemCount(): Int = questions?.size ?: 0
 
-    fun getAnswers(): List<QuestionAnswer> {
-        return questions?.map { question ->
-            QuestionAnswer(
-                id = question.id,
-                answer_id = question.selectedAnswerId,
-                answer_text = question.selectedAnswerText
-            )
-        } ?: emptyList()
+    fun getAnswers(): List<QuestionAnswer>? {
+        val invalidQuestions = mutableListOf<Int>()
+
+        val answers = questions?.mapNotNull { question ->
+            if (question.required == "*" && question.selectedAnswerId == null && question.selectedAnswerText == null) {
+                invalidQuestions.add(questions!!.indexOf(question) + 1)
+                null
+            } else {
+                QuestionAnswer(
+                    id = question.id,
+                    answer_id = question.selectedAnswerId,
+                    answer_text = question.selectedAnswerText
+                )
+            }
+        }
+
+        return if (invalidQuestions.isEmpty()) answers else null
     }
 
     fun updateQuizzes(newQuestions: MutableList<QuestionInQuiz>) {

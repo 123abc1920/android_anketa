@@ -1,7 +1,12 @@
 package com.example.task1
 
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
+import android.view.MotionEvent
+import android.view.View
+import android.view.WindowInsets
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -20,6 +25,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        hideNavigationBar()
 
         EncryptedPrefsRepository.init(this.applicationContext)
 
@@ -88,5 +95,24 @@ class MainActivity : AppCompatActivity() {
         }
 
         return true
+    }
+
+    private fun hideNavigationBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.hide(WindowInsets.Type.navigationBars())
+            window.navigationBarColor = Color.TRANSPARENT
+        } else {
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    )
+            window.navigationBarColor = Color.TRANSPARENT
+        }
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        hideNavigationBar()
+        return super.onTouchEvent(event)
     }
 }

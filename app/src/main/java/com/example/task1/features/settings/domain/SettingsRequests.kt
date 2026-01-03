@@ -3,9 +3,11 @@ package com.example.task1.features.settings.domain
 import android.content.Context
 import android.util.Log
 import android.view.View
+import androidx.navigation.NavController
 import com.example.task1.data.api.RetrofitClient
 import com.example.task1.common.authorisation.getUserIdHeader
 import com.example.task1.common.toasts.showToast
+import com.example.task1.R
 
 class SettingsRequests {
 
@@ -18,15 +20,26 @@ class SettingsRequests {
             if (userData.result == "success") {
                 mapOf(
                     "result" to View.VISIBLE,
+                    "hint_result" to View.GONE,
                     "username" to userData.username.toString(),
                     "login" to userData.login.toString()
                 )
             } else {
-                mapOf("result" to View.GONE, "username" to "", "login" to "")
+                mapOf(
+                    "result" to View.GONE,
+                    "hint_result" to View.VISIBLE,
+                    "username" to "",
+                    "login" to ""
+                )
             }
         } catch (e: Exception) {
             Log.e("API ERROR", "Ошибка загрузки данных", e)
-            mapOf("result" to View.GONE, "username" to "", "login" to "")
+            mapOf(
+                "result" to View.GONE,
+                "hint_result" to View.VISIBLE,
+                "username" to "",
+                "login" to ""
+            )
         }
     }
 
@@ -44,10 +57,12 @@ class SettingsRequests {
                 showToast(context, "Данные обновлены!")
                 true
             } else {
+                showToast(context, "${result.result}")
                 false
             }
         } catch (e: Exception) {
             Log.e("API ERROR", "Ошибка сохранения данных", e)
+            showToast(context, "${e.message}")
             false
         }
     }
@@ -58,10 +73,15 @@ class SettingsRequests {
         newPassword: String
     ): Boolean {
         return try {
+            if (newPassword == "") {
+                showToast(context, "Новый пароль не может быть пустым!")
+                return false
+            }
+
             val result = RetrofitClient.apiService.setPassword(
                 getUserIdHeader(),
                 mapOf(
-                    "old_password" to oldPassword,
+                    "password" to oldPassword,
                     "new_password" to newPassword
                 )
             )
@@ -84,7 +104,26 @@ class SettingsRequests {
             }
         } catch (e: Exception) {
             Log.e("API ERROR", "Ошибка изменения пароля", e)
+            showToast(context, "${e.message}")
             false
+        }
+    }
+
+    suspend fun deleteAccount(context: Context, navController: NavController) {
+        try {
+            val result = RetrofitClient.apiService.deleteAccount(
+                getUserIdHeader()
+            )
+
+            if (result.result == "success") {
+                showToast(context, "Аккаунт удален.")
+                navController.navigate(R.id.mainFragment)
+            } else {
+                showToast(context, "${result.result}")
+            }
+        } catch (e: Exception) {
+            Log.e("API ERROR", "Ошибка удаления", e)
+            showToast(context, "${e.message}")
         }
     }
 }

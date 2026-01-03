@@ -46,7 +46,8 @@ class WatchQuestionAdapter(
             }
             holder.answersAdapter = UsersAdapter(statics)
         } else {
-            holder.answersAdapter = UsersAdapter(question.answers)
+            holder.answersAdapter =
+                UsersAdapter(question.answers.filterNotNull() as MutableList<String>?)
         }
 
         holder.answersView.adapter = holder.answersAdapter

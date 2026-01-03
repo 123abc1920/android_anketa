@@ -83,4 +83,9 @@ interface ApiService {
     suspend fun search(
         @Body data: SearchQuizRequest
     ): QuizzesResponse
+
+    @POST("delete/account")
+    suspend fun deleteAccount(
+        @Header("Authorization") id: String
+    ): ResultResponse
 }

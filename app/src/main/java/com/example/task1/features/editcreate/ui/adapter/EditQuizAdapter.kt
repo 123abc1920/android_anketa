@@ -59,6 +59,17 @@ class EditQuizAdapter(
                 question.question_text = holder.questionName.text.toString()
             }
         }
+
+        if (question.required == "*") {
+            holder.isRequired.isChecked = true
+        }
+        holder.isRequired.setOnClickListener {
+            if (holder.isRequired.isChecked) {
+                question.required = "*"
+            } else {
+                question.required = ""
+            }
+        }
     }
 
     override fun getItemCount(): Int = questions.size

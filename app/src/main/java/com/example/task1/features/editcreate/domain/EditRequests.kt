@@ -6,6 +6,7 @@ import com.example.task1.data.database.responses.CreateQuizResponse
 import com.example.task1.data.database.responses.EditQuizRequest
 import com.example.task1.data.database.responses.Question
 import com.example.task1.common.authorisation.getUserIdHeader
+import com.example.task1.common.toasts.showToast
 
 class EditRequests {
 
@@ -33,14 +34,18 @@ class EditRequests {
                     "quizName" to response.quiz_name,
                     "startData" to response.start_date,
                     "endData" to response.end_date,
-                    "questionList" to response.questions_list
+                    "questionList" to response.questions_list,
+                    "isShown" to response.is_shown,
+                    "isAuthorShown" to response.is_author_shown
                 )
             } else {
                 mapOf<String, Any>(
                     "quizName" to "",
                     "startData" to "",
                     "endData" to "",
-                    "questionList" to mutableListOf<Question>()
+                    "questionList" to mutableListOf<Question>(),
+                    "isShown" to false,
+                    "isAuthorShown" to false
                 )
             }
         } catch (e: Exception) {
@@ -49,7 +54,9 @@ class EditRequests {
                 "quizName" to "",
                 "startData" to "",
                 "endData" to "",
-                "questionList" to mutableListOf<Question>()
+                "questionList" to mutableListOf<Question>(),
+                "isShown" to false,
+                "isAuthorShown" to false
             )
         }
     }

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.task1.R
+import com.example.task1.common.toasts.showToast
 import com.example.task1.features.user.domain.UserRequests
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -42,6 +43,7 @@ class LoginFragment : Fragment() {
                     }
 
                     is UserRequests.Result.Error -> {
+                        showToast(requireContext(), result.message)
                         Log.e("Login Error", result.message)
                     }
                 }
@@ -61,6 +63,7 @@ class LoginFragment : Fragment() {
                     }
 
                     is UserRequests.Result.Error -> {
+                        showToast(requireContext(), result.message)
                         Log.e("Login Error", result.message)
                     }
                 }

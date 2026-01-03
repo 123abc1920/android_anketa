@@ -50,7 +50,7 @@ class QuizFragment : Fragment() {
             if (result != null && isAdded) {
                 if (result["shouldNavigate"] == true) {
                     findNavController().navigate(R.id.mainFragment)
-                    showToast(requireContext(), "Анкета завершена!")
+                    showToast(requireContext(), "Анкета уже завершена!")
                 } else {
                     view.findViewById<TextView>(R.id.quiz_name).text = result["quizName"].toString()
                     view.findViewById<TextView>(R.id.start_data).text =
@@ -72,17 +72,25 @@ class QuizFragment : Fragment() {
         val sendQuiz = view.findViewById<Button>(R.id.send_quiz)
         sendQuiz.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
-                Log.i("kkk", questionAdapter.getAnswers().toString())
+                val answers = questionAdapter.getAnswers()
+
+                if (answers == null) {
+                    showToast(requireContext(), "Заполните все обязательные вопросы!")
+                    return@launch
+                }
+
                 val success = requests.sendQuiz(
                     QuizRequest(
                         quiz_id = quizId ?: "",
-                        questions = questionAdapter.getAnswers()
+                        questions = answers
                     )
                 )
 
                 if (success) {
                     showToast(requireContext(), "Анкета отправлена!")
                     findNavController().navigate(R.id.mainFragment)
+                } else {
+                    showToast(requireContext(), "Ошибка отправки анкеты")
                 }
             }
         }
