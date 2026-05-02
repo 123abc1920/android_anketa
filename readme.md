@@ -21,3 +21,7 @@
 - `Security Crypto (EncryptedSharedPreferences)` - библиотека для безопасного хранения ключей и небольших объемов конфиденциальных данных в зашифрованном виде.
 - `Navigation Component` - фреймворк для управления навигацией в приложениях с одной Activity.
 - `Koin` - библиотека для внедрения зависимостей (Dependency Injection) на Kotlin.
+
+## Видеозапись
+
+[Видео](https://disk.yandex.ru/i/FQ5sJnjPq7_fNQ)
